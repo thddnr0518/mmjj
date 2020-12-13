@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xmlns:security="http://www.springframework.org/schema/security"
+			xsi:schemaLocation="http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security.xsd
+			http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+			
+	<bean id="customAccessDenied"
+	class="com.mungmungjackjack.mmjj.security.CustomAccessDeniedhandler"></bean>
+	
+	<!-- 로그인 성공할때 로직 경로 -->
+	<bean id="LoginSuccess"
+	class="com.mungmungjackjack.mmjj.security.LoginSuccessHandler"></bean>
+	
+	<!-- 로그인 실패할때 로직 경로 -->
+	<bean id="LoginFail"
+	class="com.mungmungjackjack.mmjj.security.LoginFailHandler"></bean>
+	
+	<!-- 로그아웃할때 로직 경로 -->
+	<bean id="LogoutSuccess"
+	class="com.mungmungjackjack.mmjj.security.LogoutSuccessHandler"></bean>
+	
+	<!-- 비밀번호 암호화 -->
+	<bean id="bcryptPasswordEncoder"
+	class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
+	<bean id="customUserDetailsService"
+	class="com.mungmungjackjack.mmjj.security.CustomUserDetailsService"></bean>
+	
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@192.168.4.31:1521:xe"></property>
+<!-- 		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@192.168.4.31:1521:xe"></property> -->
+		<property name="username" value="mmjj"></property>
+		<property name="password" value="2424"></property>
+	</bean>
+	
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig"></constructor-arg>
+	</bean>
+	
+	<security:http auto-config="true" use-expressions="true">
+		
+		<!-- 권한설정으로 페이징 -->
+		<security:intercept-url pattern="/sample/all"
+				  	access="permitAll"/>
+
+		<!-- 글작성은 회원만 -->
+		<security:intercept-url pattern="/board/register"
+				  	access="hasRole('ROLE_MEMBER')"/>
+				  
+		<!-- 글수정은 회원만 -->
+		<security:intercept-url pattern="/board/modify"
+				  	access="hasRole('ROLE_MEMBER')"/>
+				  
+		<!-- 글삭제는 회원만 -->
+		<security:intercept-url pattern="/board/remove"
+				 	access="hasRole('ROLE_MEMBER')"/>
+		
+		<security:intercept-url pattern="/sample/member"
+				  	access="hasRole('ROLE_MEMBER')"/>
+		
+		<security:intercept-url pattern="/sample/admin"
+				  	access="hasRole('ROLE_ADMIN')"/>
+				  
+		<security:access-denied-handler ref="customAccessDenied"/>
+		
+		<!-- 로그인하고 권한에 따른 페이지 전환 -->
+		<security:form-login login-page="/login"
+		authentication-success-handler-ref="LoginSuccess"
+		authentication-failure-handler-ref="LoginFail"
+		username-parameter="ID"
+		password-parameter="PWD"/>
+		
+		<!-- 로그아웃 -->
+		<security:logout logout-url="/logout" 
+		success-handler-ref="LogoutSuccess"
+		invalidate-session="true" delete-cookies="JSESSION_ID"/>
+		
+	</security:http>
+	
+	<security:authentication-manager>
+		
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+	
+			<security:password-encoder ref="bcryptPasswordEncoder"/>
+			
+		</security:authentication-provider>
+		
+	</security:authentication-manager>
+	
+</beans>

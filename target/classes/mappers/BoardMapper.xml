@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mungmungjackjack.mmjj.board.mapper.BoardMapper">
+	<insert id="create">
+		INSERT INTO board(bno, title, content, writer)
+		VALUES (board_seq.nextval, #{title}, #{content}, #{writer})
+		<selectKey keyProperty="bno" resultType="Integer" order="AFTER">
+			SELECT board_seq.currval FROM dual
+		</selectKey>
+	</insert>
+	
+	<select id="read" resultType="com.mungmungjackjack.mmjj.board.domain.BoardDTO">
+		SELECT	bno,
+				title,
+				content,
+				writer,
+				regdate,
+				viewcnt
+		FROM	board
+		WHERE	bno=#{bno}
+	</select>
+	
+	<update id="update">
+		UPDATE	board
+		SET		title=#{title},
+				content=#{content}
+		WHERE	bno=#{bno}
+	</update>
+	
+	<delete id="delete">
+		DELETE	FROM board
+		WHERE	bno=#{bno}
+	</delete>
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title LIKE '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							content LIKE '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							writer LIKE '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<select id="getListWithPaging" resultType="com.mungmungjackjack.mmjj.board.domain.BoardDTO">
+		<![CDATA[
+			SELECT	bno,
+					title,
+					content,
+					writer,
+					regdate,
+					viewcnt,
+					replycnt
+			FROM	(
+				SELECT /*+ INDEX_DESC(board idx_board_PK) */
+					rownum rn,
+					bno,
+					title,
+					content,
+					writer,
+					regdate,
+					viewcnt,
+					replycnt
+				FROM board
+				WHERE 
+		]]>
+		
+		<include refid="criteria"></include>
+		
+		<![CDATA[
+				rownum <= #{pageNum} *#{amount}
+			)
+			WHERE rn > (#{pageNum} - 1)*#{amount}
+		]]>
+	</select>
+	
+	<select id="getTotalCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM board
+		WHERE 
+		<include refid="criteria"></include>
+		bno > 0
+	</select>
+	
+	<update id="updateViewCnt">
+		UPDATE board
+		SET viewcnt = viewcnt + 1
+		WHERE bno = #{bno}
+	</update>
+	
+	<update id="updateReplyCnt">
+		UPDATE board
+		SET replycnt = replycnt + #{amount}
+		WHERE bno = #{bno}
+	</update>
+	
+	<select id="rank" resultType="com.mungmungjackjack.mmjj.board.domain.BoardRankDTO">
+		<![CDATA[
+			SELECT	rownum,
+					e.*
+			FROM    (SELECT b.viewcnt,
+	            			b.title,
+	            			b.bno,
+	            			b.writer,
+	            			a.uuid,
+	            			a.UPLOADPATH,
+	            			a.FILENAME
+	    			FROM    board b,
+	            			attach a
+				    WHERE   b.bno = a.bno
+				    AND		a.filetype = '1'
+				    ORDER BY b.viewcnt DESC)e
+			WHERE rownum <= 3
+		]]>
+	</select>
+</mapper>

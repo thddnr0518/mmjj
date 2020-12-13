@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mungmungjackjack.mmjj.board.mapper.BoardAttachMapper">
+
+	<insert id="insert">
+		INSERT INTO attach(uuid, uploadPath, fileName, filetype, bno)
+		VALUES(#{uuid},#{uploadPath},#{fileName},#{filetype},#{bno})
+	</insert>
+	
+	<delete id="delete">
+		DELETE FROM attach
+		WHERE uuid = #{uuid}
+	</delete>
+	
+	<select id="findByBno" resultType="com.mungmungjackjack.mmjj.board.domain.BoardAttachDTO">
+		SELECT *
+		FROM attach
+		WHERE bno = #{bno}
+	</select>
+	
+	<delete id="deleteAll">
+		DELETE FROM attach
+		WHERE bno = #{bno}
+	</delete>
+	
+	<select id="getOldFiles" resultType="com.mungmungjackjack.mmjj.board.domain.BoardAttachDTO">
+		SELECT *
+		FROM attach
+		WHERE uploadpath = to_char(sysdate -1, 'yyyy\mm\dd')
+	</select>
+</mapper>

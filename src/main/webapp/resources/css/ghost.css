@@ -1,0 +1,118 @@
+@charset "UTF-8";
+
+@import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:700';
+
+/* 고스트 버튼  시작*/
+a.bttn {
+	font-family: "Source Sans Pro", sans-serif;
+	color: #fff;
+	text-decoration: none;
+	-webkit-transition: 0.3s all ease;
+	transition: 0.3s ease all;
+}
+a.bttn:hover {
+	color: black;
+}
+a.bttn:focus {
+	color: black;
+}
+
+.bttn {
+	color: #fff;
+	text-transform: uppercase;
+	padding: 10px 20px;
+	text-align: center;
+	border:background;
+	font-size: 14px;
+	line-height: 100%;
+	font-weight: bold;
+	border-radius: 20px;
+	box-shadow: 0 2px 10px rgba(255, 255, 255, 0.7), 
+	0 3px 6px rgba(0, 0, 0, 0.1);
+	position: relative;
+}
+.bttn:before {
+	-webkit-transition: 0.5s all ease;
+	transition: 0.5s all ease;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	right: 50%;
+	bottom: 0;
+	opacity: 0;
+	content: "";
+	background-color: #fff;
+	z-index: -2;
+	border-radius: 20px;
+}
+.bttn:hover:before {
+	-webkit-transition: 0.5s all ease;
+	transition: 0.5s all ease;
+	left: 0;
+	right: 0;
+	opacity: 1;
+}
+.bttn:focus:before {
+	transition: 0.5s all ease;
+	left: 0;
+	right: 0;
+	opacity: 1;
+}
+
+/* More버튼 고스트 화 */
+a.mbttn {
+	font-family: "Source Sans Pro", sans-serif;
+	color: black;
+	text-decoration: none;
+	-webkit-transition: 0.3s all ease;
+	transition: 0.3s ease all;
+}
+a.mbttn:hover {
+	color: white;
+}
+a.mbttn:focus {
+	color: white;
+}
+
+.mbttn {
+	color: black;
+	text-transform: uppercase;
+	padding: 10px 20px;
+	text-align: center;
+	border:background;
+	font-size: 14px;
+	line-height: 100%;
+	font-weight: bold;
+	border-radius: 20px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16), 
+	0 3px 6px rgba(0, 0, 0, 0.1);
+	position: relative;
+}
+.mbttn:before {
+	-webkit-transition: 0.5s all ease;
+	transition: 0.5s all ease;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	right: 50%;
+	bottom: 0;
+	opacity: 0;
+	content: "";
+	background-color: #566270;
+	z-index: -2;
+	border-radius: 20px;
+}
+.mbttn:hover:before {
+	-webkit-transition: 0.5s all ease;
+	transition: 0.5s all ease;
+	left: 0;
+	right: 0;
+	opacity: 1;
+}
+.mbttn:focus:before {
+	transition: 0.5s all ease;
+	left: 0;
+	right: 0;
+	opacity: 1;
+}
+/* 고스트 버튼  끝*/
