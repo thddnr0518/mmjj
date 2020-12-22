@@ -81,4 +81,16 @@
 		VALUES(#{userid}, 'ROLE_MEMBER')
 	</insert>
 	
+	<delete id="deleteAuth">
+		DELETE member_auth
+		WHERE userid = (SELECT  userid
+                		FROM    member
+                		WHERE   useryn='N');
+	</delete>
+	
+	<delete id="deleteMem">
+		DELETE	FROM member
+		WHERE	useryn='N'
+	</delete>
+	
 </mapper>

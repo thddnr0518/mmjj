@@ -12,4 +12,7 @@ public interface IMemberService {
 	public String getTime();
 	public MemberDTO selMember(String userid) throws Exception;
 	public MemberDTO selLoginInfo(String userid, String userpw) throws Exception;
+	
+	public void deleteAuth();
+	public void deleteMem();
 }

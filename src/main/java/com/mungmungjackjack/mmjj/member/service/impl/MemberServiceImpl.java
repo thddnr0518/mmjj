@@ -55,4 +55,16 @@ public class MemberServiceImpl implements IMemberService{
 		mapper.authMem(userid);
 	}
 
+	@Override
+	public void deleteAuth() {
+		mapper.deleteAuth();
+		
+	}
+
+	@Override
+	public void deleteMem() {
+		mapper.deleteMem();
+		
+	}
+
 }
