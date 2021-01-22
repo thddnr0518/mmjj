@@ -64,17 +64,17 @@
 					viewcnt,
 					replycnt
 			FROM	(
-				SELECT /*+ INDEX_DESC(board idx_board_PK) */
-					rownum rn,
-					bno,
-					title,
-					content,
-					writer,
-					regdate,
-					viewcnt,
-					replycnt
-				FROM board
-				WHERE 
+					SELECT	/*+ INDEX_DESC(board idx_board_PK) */
+							rownum rn,
+							bno,
+							title,
+							content,
+							writer,
+							regdate,
+							viewcnt,
+							replycnt
+					FROM	board
+					WHERE 
 		]]>
 		
 		<include refid="criteria"></include>

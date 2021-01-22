@@ -2,7 +2,7 @@ package com.mungmungjackjack.mmjj.reply.service;
 
 import java.util.List;
 
-import com.mungmungjackjack.mmjj.board.domain.Criteria;
+import com.mungmungjackjack.mmjj.domain.Criteria;
 import com.mungmungjackjack.mmjj.reply.domain.ReplyDTO;
 import com.mungmungjackjack.mmjj.reply.domain.ReplyPageDTO;
 

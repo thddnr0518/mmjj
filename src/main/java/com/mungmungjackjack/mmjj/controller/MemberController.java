@@ -55,7 +55,7 @@ public class MemberController {
 	}
 	
 	@PostMapping(value = "/join")
-	public String join(MemberDTO mDto,HttpServletResponse response, RedirectAttributes rttr) throws Exception{
+	public void join(MemberDTO mDto,HttpServletResponse response, RedirectAttributes rttr) throws Exception{
 		
 		log.info("join post.............");
 		
@@ -71,7 +71,5 @@ public class MemberController {
 		PrintWriter pw = response.getWriter();
 		
 		pw.print("<script>" + "alert('회원가입에 성공하셨습니다.');" + "location.href='" + "/mmjj/';" + "</script>");
-		
-		return null; /*"redirect:/";*/
 	}
 }

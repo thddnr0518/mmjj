@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mungmungjackjack.mmjj.board.domain.Criteria;
+import com.mungmungjackjack.mmjj.domain.Criteria;
 import com.mungmungjackjack.mmjj.reply.domain.ReplyDTO;
 import com.mungmungjackjack.mmjj.reply.domain.ReplyPageDTO;
 import com.mungmungjackjack.mmjj.reply.service.IReplyService;
@@ -69,7 +69,6 @@ public class ReplyController {
 	
 	@PreAuthorize("principal.username == #rDto.replyer")
 	@DeleteMapping(value = "/{rno}",
-//				   produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
 					consumes = "application/json",
 					produces = {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> remove(@RequestBody ReplyDTO rDto,
@@ -90,7 +89,6 @@ public class ReplyController {
 	@RequestMapping(value = "/{rno}",
 					method = {RequestMethod.PUT, RequestMethod.PATCH},
 					consumes = "application/json",
-//					produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
 					produces = {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> modify(@PathVariable("rno") int rno,
 										 @RequestBody ReplyDTO rDto) {

@@ -1137,7 +1137,6 @@ div.pp_default .pp_social {
 	#nino-services .item:not(:nth-last-child(-n+1)) {
 		border-bottom: 1px solid #e5e5e5;
 		margin-bottom: 20px;
-		padding-bottom: 10px;
 	}
 }
 

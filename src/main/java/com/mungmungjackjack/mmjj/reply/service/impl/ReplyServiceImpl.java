@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mungmungjackjack.mmjj.board.domain.Criteria;
 import com.mungmungjackjack.mmjj.board.service.IBoardService;
+import com.mungmungjackjack.mmjj.domain.Criteria;
 import com.mungmungjackjack.mmjj.reply.domain.ReplyDTO;
 import com.mungmungjackjack.mmjj.reply.domain.ReplyPageDTO;
 import com.mungmungjackjack.mmjj.reply.mapper.ReplyMapper;

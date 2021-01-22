@@ -54,6 +54,10 @@
 		<!-- 글수정은 회원만 -->
 		<security:intercept-url pattern="/board/modify"
 				  	access="hasRole('ROLE_MEMBER')"/>
+				  	
+		<!-- 상품등록은 회원만 -->
+		<security:intercept-url pattern="/product/register"
+				  	access="hasRole('ROLE_MEMBER')"/>
 				  
 		<!-- 글삭제는 회원만 -->
 		<security:intercept-url pattern="/board/remove"

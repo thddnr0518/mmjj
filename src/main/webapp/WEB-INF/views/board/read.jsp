@@ -449,7 +449,7 @@ $(document).ready(function() {
 	
 	$("button[data-oper='list']").on("click", function(e){
 		operForm.find("#bno").remove();
-		operForm.attr("action","${contextPath}/board")
+		operForm.attr("action","${contextPath}/board/list")
 		operForm.submit();
 	});
 });

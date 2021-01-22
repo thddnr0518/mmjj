@@ -144,7 +144,7 @@ $(document).ready(function() {
 			formObj.attr("action", "${contextPath}/board/remove");
 		} else if(operation === "list") {
 			//move to list
-			formObj.attr("action", "${contextPath}/board").attr("method","get");
+			formObj.attr("action", "${contextPath}/board/list").attr("method","get");
 			
 			var pageNumTag = $("input[name='pageNum']").clone();
 			var amountTag = $("input[name='amount']").clone();
@@ -157,7 +157,7 @@ $(document).ready(function() {
 			formObj.append(amountTag);
 			formObj.append(keywordTag);
 			formObj.append(typeTag);
-			//self.location = "${contextPath}/board";
+			//self.location = "${contextPath}/board/list";
 		
 			//return;      
 		} else if (operation === "modify") {

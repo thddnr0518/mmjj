@@ -341,10 +341,11 @@
 					<div class="collapse navbar-collapse pull-left" id="nino-navbar-collapse">
 						<ul class="nav navbar-nav">
 							<li class="active"><a href="#nino-header">Home <span class="sr-only">(current)</span></a></li>
-							<li><a href="#MBOARD">BOARD</a></li>
+							<li><a href="#board">Board</a></li>
 							<li><a href="#ranking">Rank</a></li>
+							<li><a href="#shop">Shop</a></li>
 							<!-- <li><a href="#nino-portfolio">Animal Park</a></li> -->
-							<li><a href="#nino-ourTeam">About</a></li>
+							<!-- <li><a href="#About">About</a></li> -->
 							<sec:authorize access="isAuthenticated()">
 								<li><a class="clckk">My page(<sec:authentication property="principal.member.nickName"/>)</a></li>
 								<li>

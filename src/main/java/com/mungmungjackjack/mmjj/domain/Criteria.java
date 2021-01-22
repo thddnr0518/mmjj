@@ -1,4 +1,4 @@
-package com.mungmungjackjack.mmjj.board.domain;
+package com.mungmungjackjack.mmjj.domain;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,6 +33,6 @@ public class Criteria {
 														   .queryParam("amount", this.getAmount())
 														   .queryParam("type", this.getType())
 														   .queryParam("keyword", this.getKeyword());
-	return builder.toUriString();
+		return builder.toUriString();
 	}
 }

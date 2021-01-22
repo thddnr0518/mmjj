@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mungmungjackjack.mmjj.product.mapper.ProductMapper">
+
+	<!-- 상품 등록 -->
+	<insert id="insertProduct">
+		INSERT INTO product(product_no, saller_no, product_name, product_content, product_cnt, product_price, delevery_price)
+		VALUES('p'||product_seq.nextval, #{sallerNo}, #{productName}, #{productContent}, #{productCnt}, #{productPrice}, #{deleveryPrice})
+	</insert>
+	
+	<!-- 상품 상세 -->
+	<select id="readProduct" resultType="com.mungmungjackjack.mmjj.product.domain.ProductVO">
+		SELECT	product_no,
+				saller_no,
+				product_name,
+				product_content,
+				product_cnt,
+				product_price,
+				delevery_price
+		FROM	product
+		WHERE	product_no=#{productNo}
+	</select>
+	
+	<!-- 상품 수정 -->
+	<update id="updateProduct">
+		UPDATE	product
+		SET		product_name=#{productName},
+	          	product_content=#{productContent},
+	          	product_cnt=#{productCnt},
+	          	product_price=#{productPrice},
+	          	delevery_price=#{deleveryPrice}
+		WHERE   product_no=#{productNo}
+	</update>
+	
+	<!-- 상품 판매 중단 -->
+	<update id="notUseProduct">
+		UPDATE	product
+		SET		product_useyn='n'
+		WHERE   product_no=#{productNo}
+	</update>
+	
+	<!-- 상품 리스트 -->
+	<select id="listProduct" resultType="com.mungmungjackjack.mmjj.product.domain.ProductVO">
+        <![CDATA[
+			SELECT	product_no,
+					product_name,
+					product_price,
+					product_content,
+					saller_no,
+					product_cnt,
+					product_useyn,
+					order_cnt,
+					decode(product_cnt, 0, 'n', 'y')"sal_yn"
+			FROM	(
+					SELECT	/*+ INDEX_DESC(product idx_product_PK) */
+							rownum rn,
+							product_no,
+							product_name,
+							product_price,
+							product_content,
+							saller_no,
+							product_cnt,
+							product_useyn,
+							order_cnt,
+							decode(product_cnt, 0, 'n', 'y')"sal_yn"
+					FROM	product
+					WHERE
+		]]>
+		
+		<include refid="criteria"></include>
+		
+		<![CDATA[
+				rownum <= #{pageNum} *#{amount}
+			)
+			WHERE rn > (#{pageNum} - 1)*#{amount}
+			AND product_useyn='y'
+		ORDER BY 9 DESC, 8 DESC
+		]]>
+    </select>
+    
+    <!-- 판매 중인 상품 개수 -->
+    <select id="getTotalProductCnt" resultType="int">
+		SELECT	COUNT(*)
+		FROM	product
+		WHERE 
+		<include refid="criteria"></include>
+				product_useyn='y'
+	</select>
+	
+	<!-- 재고 0개 상품 -->
+	
+	
+	<!-- 주문시 주문 수량만큼 상품수량 감소 -->
+	<update id="orderProductCnt">
+		UPDATE	product
+		SET		product_cnt - #{orderCnt}
+		WHERE	(
+				SELECT	product_no
+				FROM	order_detail
+				WHERE	
+				)
+				=#{productNo}
+	</update>
+	
+	<!-- 배치로 상품 완전제거 -->
+	<delete id="deleteProduct">
+		DELETE
+		FROM	product
+		WHERE	product_useyn='n'
+	</delete>
+	
+    <sql id="criteria">
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+							product_name LIKE '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							product_content LIKE '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'S'.toString()">
+							saller_no LIKE '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+</mapper>

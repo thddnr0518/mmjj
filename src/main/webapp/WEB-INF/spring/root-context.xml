@@ -50,4 +50,6 @@
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.board.mapper"/>	
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.member.mapper"/>
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.reply.mapper"/>
+	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.product.mapper"/>
+	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.cart.mapper"/>
 </beans>

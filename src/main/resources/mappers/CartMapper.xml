@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mungmungjackjack.mmjj.cart.mapper.CartMapper">
+	
+	<!-- 장바구니 목록 -->
+	<select id="listCart" resultType="com.mungmungjackjack.mmjj.cart.domain.CartVO">
+		SELECT	product_no,
+				cart_no
+		FROM	product_cart
+		WHERE	userid=#{userid}
+	</select>
+	
+	<!-- 장바구니 추가 -->
+	<insert id="addCart">
+		INSERT INTO product_cart(cart_no, userid, product_no)
+		VALUES(cart_seq.nextval, #{userid}, #{productNo})
+	</insert>
+	
+	<!-- 장바구니 제거 -->
+	<delete id="deleteCart">
+		DELETE
+		FROM     product_cart
+		WHERE    cart_no=#{cartNo}
+	</delete>
+	
+	<!-- 미리보기 5개 -->
+	<select id="previewCart" resultType="com.mungmungjackjack.mmjj.cart.domain.CartVO">
+		<![CDATA[
+			SELECT	rownum,
+					product_no,
+					cart_no
+			FROM	product_cart
+			WHERE	userid=#{userid}
+			AND		rownum <=5
+			ORDER BY cart_no DESC
+		]]>
+	</select>
+	
+	
+</mapper>

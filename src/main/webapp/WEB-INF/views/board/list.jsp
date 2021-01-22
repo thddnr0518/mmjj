@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ include file="include/header.jsp" %>
+<%@ include file="../include/header.jsp" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath == '/' ? '' : pageContext.request.contextPath }" scope="application" />
 		</div>
 	</header>
@@ -44,7 +44,9 @@
 							</c:forEach>
 				    	</tbody>
 					</table> <!-- table태그 끝 -->
-				                       
+
+
+				<!-- 페이징 시작-->
 				<div class='pull-right'>
 					<ul class="pagination">
 						<c:if test="${pageMaker.prev}">
@@ -60,10 +62,10 @@
 						</c:if>
 					</ul>
 				</div>
-				<!--  end Pagination -->
+				<!-- 페이징 끝-->
 				
 				<!-- 실제 페이지를 클릭하면 동작을 하는 부분  -->
-				<form id='actionForm' action="${contextPath}/board" method='get'>
+				<form id='actionForm' action="${contextPath}/board/list" method='get'>
 					<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
 					<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
 					<input type='hidden' name='type' value='${pageMaker.cri.type}'>
@@ -100,7 +102,7 @@
 <div style="top: 50px; width: 100%; position: fixed; z-index: 4; background-color: #fffff3;">
 	<div style="display: table; width: 80%">
 		<div style="display:table-cell; width: 80%; vertical-align: bottom; padding-left: 10px; text-align: center;">
-			<form action="${contextPath }/board" method="get" id="searchForm">
+			<form action="${contextPath }/board/list" method="get" id="searchForm">
 				<select name="type">
 					<%-- <option value="" <c:out value="${pageMaker.cri.type == null?'selected':'' }"/>>---</option> --%>
 					<option value="T" <c:out value="${pageMaker.cri.type eq 'T'?'selected':'' }"/>>제목</option>
@@ -124,6 +126,7 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
 //		var result = '<c:out value="${result}"/>';
 		var result = "${result}";
 		
@@ -159,8 +162,6 @@
 		$(".paginate_button a").on("click", function(e) {
 			e.preventDefault(); // <a>태그를 클릭해도 페이지 이동이 없도록 처리
 			
-			console.log("click");
-
 			actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 			actionForm.submit();
 		});
@@ -199,4 +200,4 @@
 
 	});
 </script>
-<%@include file="include/footer.jsp"%>
+<%@include file="../include/footer.jsp"%>

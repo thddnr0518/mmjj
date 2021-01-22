@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mungmungjackjack.mmjj.board.domain.AttachFileDTO;
+import com.mungmungjackjack.mmjj.domain.AttachFileDTO;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -93,6 +93,63 @@ public class UploadController {
 	}
 	
 	@PreAuthorize("isAuthenticated()")
+	@PostMapping(value = "/oneUploadAjaxAction",
+				produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<AttachFileDTO> oneUploadAjaxPost(MultipartFile uploadFile){
+		log.info("oneUploadAjaxPost.....................");
+		
+		String uploadFolderPath = getFolder();
+		
+		File uploadFolder = new File(uploadPath, getFolder());
+		log.info("uploadFolder path : " + uploadFolder);
+		
+		if (uploadFolder.exists() == false) {
+			uploadFolder.mkdirs();
+		}
+		
+		log.info("---------------------------------");
+		log.info("Upload File Name : " + uploadFile.getOriginalFilename());
+		log.info("Upload File Size : " + uploadFile.getSize());
+		log.info("Upload File Type : " + uploadFile.getContentType());
+		
+		AttachFileDTO attachFileDto = new AttachFileDTO();
+		
+		String uploadFileName = uploadFile.getOriginalFilename();
+		
+		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+		log.info("only file name : " + uploadFileName);
+		
+		attachFileDto.setFileName(uploadFileName);
+		
+		UUID uuid = UUID.randomUUID();
+		
+		uploadFileName = uuid.toString() + "_" + uploadFileName;
+		
+		try {
+			File saveFile = new File(uploadFolder, uploadFileName);
+			uploadFile.transferTo(saveFile);
+			
+			attachFileDto.setUuid(uuid.toString());
+			attachFileDto.setUploadPath(uploadFolderPath);
+			
+			if (checkImageType(saveFile)) {
+				attachFileDto.setImage(true);
+				
+				File thumbnail = new File(uploadFolder, "s_" + uploadFileName);
+				
+				Thumbnails.of(saveFile).size(100, 100).toFile(thumbnail);
+			}
+			
+			
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		
+		return new ResponseEntity<AttachFileDTO>(attachFileDto, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/uploadAjaxAction",
 				produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
@@ -112,8 +169,8 @@ public class UploadController {
 		for (MultipartFile multipartFile : uploadFile) {
 			log.info("---------------------------------");
 			log.info("Upload File Name : " + multipartFile.getOriginalFilename());
-			log.info("Upload File Name : " + multipartFile.getSize());
-			log.info("Upload File Name : " + multipartFile.getContentType());
+			log.info("Upload File Size : " + multipartFile.getSize());
+			log.info("Upload File Type : " + multipartFile.getContentType());
 			
 			AttachFileDTO attachFileDto = new AttachFileDTO();
 			

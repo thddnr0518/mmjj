@@ -1,4 +1,4 @@
-package com.mungmungjackjack.mmjj.board.domain;
+package com.mungmungjackjack.mmjj.domain;
 
 import lombok.Data;
 

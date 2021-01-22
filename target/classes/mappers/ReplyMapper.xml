@@ -48,7 +48,8 @@
 				WHERE bno=#{bno}
 				AND rno > 0
 				AND rownum <= #{cri.pageNum} * #{cri.amount}
-				)WHERE rn > (#{cri.pageNum} -1) * #{cri.amount}
+				)
+		WHERE rn > (#{cri.pageNum} -1) * #{cri.amount}
 		]]>
 	</select>
 	

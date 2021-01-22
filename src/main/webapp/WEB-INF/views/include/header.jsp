@@ -340,7 +340,11 @@
 					<div class="collapse navbar-collapse pull-left" id="nino-navbar-collapse">
 						<ul class="nav navbar-nav">
 							<li class="active"><a href="${contextPath }/">Home <span class="sr-only">(current)</span></a></li>
-							<li><a href="${contextPath}/board">BOARD</a></li>
+							<li><a href="${contextPath}/board/list">Board</a></li>
+							<li><a href="${contextPath}/product/list">Shop</a></li>
+							<!-- <li><a href="#ranking">Rank</a></li> -->
+							<!-- <li><a href="#nino-portfolio">Animal Park</a></li> -->
+							<!-- <li><a href="#About">About</a></li> -->
 							<sec:authorize access="isAuthenticated()">
 								<li><a class="clckk">My page(<sec:authentication property="principal.member.nickName"/>)</a></li>
 								<li>

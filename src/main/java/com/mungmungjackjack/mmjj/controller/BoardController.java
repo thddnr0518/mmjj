@@ -5,8 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,9 +22,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mungmungjackjack.mmjj.board.domain.BoardAttachDTO;
 import com.mungmungjackjack.mmjj.board.domain.BoardDTO;
-import com.mungmungjackjack.mmjj.board.domain.Criteria;
-import com.mungmungjackjack.mmjj.board.domain.PageDTO;
 import com.mungmungjackjack.mmjj.board.service.IBoardService;
+import com.mungmungjackjack.mmjj.domain.Criteria;
+import com.mungmungjackjack.mmjj.domain.PageDTO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -40,7 +38,7 @@ public class BoardController {
 	
 	private String uploadPath = "D:\\workspace\\sts_4.8.1\\mmjj\\src\\main\\webapp\\resources\\fileUpload";
 	
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public void listAll(Criteria cri, Model model) throws Exception{
 		log.info("show all list............" + cri);
 		
@@ -71,7 +69,7 @@ public class BoardController {
 		}
 		rttr.addFlashAttribute("result", bDto.getBno());
 		
-		return "redirect:/board";
+		return "redirect:/board/list";
 	}
 	
 	@RequestMapping(value = {"/read","/modify"}, method = RequestMethod.GET)
@@ -89,7 +87,7 @@ public class BoardController {
 			rttr.addFlashAttribute("result", "success");
 		}
 		
-		return "redirect:/board" + cri.getListLink();
+		return "redirect:/board/list" + cri.getListLink();
 	}
 	
 	@PreAuthorize("principal.username == #writer")
@@ -104,7 +102,7 @@ public class BoardController {
 			rttr.addFlashAttribute("result", "success");
 		}
 		
-		return "redirect:/board" + cri.getListLink();
+		return "redirect:/board/list" + cri.getListLink();
 	}
 	
 	private void deleteFiles(List<BoardAttachDTO> attachList) {

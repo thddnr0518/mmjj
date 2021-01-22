@@ -7,7 +7,7 @@
 	
 	
 
- 	<%-- <div class="customBoard">
+ 	<div class="customBoard">
 		<div class="panel panel-default">
 			<div class="panel-heading">Files</div>
 			<div class="panel-body">
@@ -30,7 +30,7 @@
 				</div>
 			</div>
 		</div>
-	</div> --%>
+	</div>
 	
 	<!-- Wrapper for slides -->
 		<div class="carousel-inner" role="listbox">
@@ -142,7 +142,7 @@
 	<!-- 최근 인기 글 끝-->
 	
 	<!-- 인기 글 시작 -->
-	 <section id="MBOARD">
+	 <section id="board">
 		<div class="container">
 			<h2 class="nino-sectionHeading">
 				<span class="nino-subHeading">Day</span>
@@ -181,7 +181,7 @@
 							</a>
 						</div>
 					</div>
-				</div><div style="padding-top: 20px; text-align: right; color: #566270;"><a href="${contextPath }/board" class="mbttn">Show More...</a></div>
+				</div><div style="padding-top: 20px; text-align: right; color: #566270;"><a href="${contextPath }/board/list" class="mbttn">Show More...</a></div>
 			</div>
 		</div>		
 	</section>
@@ -233,6 +233,51 @@
 	</section>	
 	<!-- 랭킹 높은 게시글 끝 -->
 	<!-- MMJJ 끝 -->
+	
+	<!-- 샵 시작 -->
+	 <section id="shop">
+		<div class="container">
+			<h2 class="nino-sectionHeading">
+				<span class="nino-subHeading">Shop</span>
+			</h2>
+			<p class="nino-sectionDesc">분기동안 추천을 많이 받은 게시글 입니다. </p>
+			<div class="sectionContent">
+				<div class="row nino-hoverEffect">
+					<div class="col-md-4 col-sm-4">
+						<div class="item">
+							<a class="overlay" href="#">
+								<span class="content">
+									First
+								</span>
+								<img src="${contextPath }/resources/mogo/images/story/img-1.jpg" alt="최근 게시글1">
+							</a>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4">
+						<div class="item">
+							<a class="overlay" href="#">
+								<span class="content">
+									Second
+								</span>
+								<img src="${contextPath }/resources/mogo/images/story/img-2.jpg" alt="최근 게시글2">
+							</a>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4">
+						<div class="item">
+							<a class="overlay" href="#">
+								<span class="content">
+									Third
+								</span>
+								<img src="${contextPath }/resources/mogo/images/story/img-3.jpg" alt="최근 게시글3">
+							</a>
+						</div>
+					</div>
+				</div><div style="padding-top: 20px; text-align: right; color: #566270;"><a href="${contextPath }/product/list" class="mbttn">Show More...</a></div>
+			</div>
+		</div>		
+	</section>	
+	<!-- 샵 끝 -->
 	
 	<!-- Animal Park 시작-->
 	<%-- <section id="nino-portfolio">
@@ -338,7 +383,7 @@
 	<!-- Animal Park 끝-->
 	
 	 <!-- About (연혁) 시작 -->
-	<section id="nino-ourTeam">
+	<%-- <section id="About">
 		<div class="container">
 			<h2 class="nino-sectionHeading">
 				<span class="nino-subHeading">Who we are</span>
@@ -403,6 +448,6 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> --%>
 	 <!-- About (연혁) 끝 -->
 <%@ include file="include/footer.jsp" %>

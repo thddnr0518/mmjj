@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mungmungjackjack.mmjj.board.domain.BoardAttachDTO;
 import com.mungmungjackjack.mmjj.board.domain.BoardDTO;
 import com.mungmungjackjack.mmjj.board.domain.BoardRankDTO;
-import com.mungmungjackjack.mmjj.board.domain.Criteria;
 import com.mungmungjackjack.mmjj.board.mapper.BoardAttachMapper;
 import com.mungmungjackjack.mmjj.board.mapper.BoardMapper;
 import com.mungmungjackjack.mmjj.board.service.IBoardService;
+import com.mungmungjackjack.mmjj.domain.Criteria;
 
 import lombok.extern.log4j.Log4j;
 
