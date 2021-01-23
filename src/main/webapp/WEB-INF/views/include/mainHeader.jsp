@@ -342,7 +342,7 @@
 						<ul class="nav navbar-nav">
 							<li class="active"><a href="#nino-header">Home <span class="sr-only">(current)</span></a></li>
 							<li><a href="#board">Board</a></li>
-							<li><a href="#ranking">Rank</a></li>
+							<!-- <li><a href="#ranking">Rank</a></li> -->
 							<li><a href="#shop">Shop</a></li>
 							<!-- <li><a href="#nino-portfolio">Animal Park</a></li> -->
 							<!-- <li><a href="#About">About</a></li> -->

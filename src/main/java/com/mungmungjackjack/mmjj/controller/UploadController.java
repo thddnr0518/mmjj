@@ -138,7 +138,7 @@ public class UploadController {
 				
 				File thumbnail = new File(uploadFolder, "s_" + uploadFileName);
 				
-				Thumbnails.of(saveFile).size(100, 100).toFile(thumbnail);
+				Thumbnails.of(saveFile).size(300, 200).toFile(thumbnail);
 			}
 			
 			

@@ -6,8 +6,8 @@
 	
 	
 	
-
- 	<div class="customBoard">
+	<!-- 랭크 -->
+ 	<%-- <div class="customBoard">
 		<div class="panel panel-default">
 			<div class="panel-heading">Files</div>
 			<div class="panel-body">
@@ -19,6 +19,7 @@
 						<input type="text" value="${rank.uuid}" id="uploadPath3"><br>
 						<input type="text" value="${rank.uploadPath}" id="uploadPath2"><br>
 						<input type="text" value="${rank.fileName}" id="uploadPath4"><br>
+						<input type="text" value="${contextPath}${rank.imgSrc}${rank.uploadPath}\s_${rank.uuid}_${rank.fileName}"><br>
 						<img alt="랭크이미지" src="${contextPath}${rank.imgSrc}${rank.uploadPath}\s_${rank.uuid}_${rank.fileName}"><br>
 					</c:forEach>
 					<ul>
@@ -30,44 +31,33 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> --%>
 	
-	<!-- Wrapper for slides -->
-		<div class="carousel-inner" role="listbox">
-			<div class="item active">
-				<h2 class="nino-sectionHeading">
-					<%-- <c:forEach items="${rank }" var="rank">
-						<span class="nino-subHeading">${rank.writer }</span>
-					</c:forEach> --%>
-					<span class="nino-subHeading">First</span>
-					First<br>
+ <!-- Wrapper for slides -->
+	<div class="carousel-inner" role="listbox">
+		<c:forEach items="${rank}" var="rank" varStatus="status">
+			<div class="item ${ status.first ? 'active' : ''}">
+				<h2 class="nino-sectionHeading" >
+					<span class="nino-subHeading">
+						<img alt="등수 이미지" src="${contextPath}/resources/img/${status.count }.png" width="30px" height="30px">
+						${rank.title}
+					</span>
+					<div style="width: 300px; height: 200px; margin: 0 auto;" class="preview4">
+						<img alt="랭크이미지" style="width: 100%; height: 100%;" src="${contextPath}${rank.imgSrc}${rank.uploadPath}\s_${rank.uuid}_${rank.fileName}" >
+					</div>
 				</h2>
-				<a href="#" class="bttn">Go to Show</a>
+				<a href="${contextPath}/board/read?bno=${rank.bno}" class="bttn">Go to Show</a>
 			</div>
-			<div class="item">
-				<h2 class="nino-sectionHeading">
-					<span class="nino-subHeading">Seconds</span>
-					Seconds <br>
-				</h2>
-				<a href="#" class="bttn">Go to Park</a>
-			</div>
-			<div class="item">
-				<h2 class="nino-sectionHeading">
-					<span class="nino-subHeading">Three</span>
-					Three <br>
-				</h2>
-				<a href="#" class="bttn">Go to Park</a>
-			</div>
-			<div class="item">
-				<h2 class="nino-sectionHeading">
-					<span class="nino-subHeading">Animal Park</span>
-					Welcome <br>
-				</h2>
-				<a href="#" class="bttn">Go to Park</a>
-			</div>
+		</c:forEach>
+		<div class="item">
+			<h2 class="nino-sectionHeading">
+				<span class="nino-subHeading">Shop</span>
+				Welcome <br>
+			</h2>
+			<a href="#" class="bttn">Go to Park</a>
 		</div>
-	
-	
+	</div>
+	 
 	
 	<!-- Indicators -->
 	<ol class="carousel-indicators clearfix">
@@ -95,60 +85,13 @@
 </section>
 </header>
 	<!-- MMJJ 시작 -->
-	<!-- 최근 인기 글 끝-->
-	 <section id="nino-services">
-		<div class="container">
-			<h2 class="nino-sectionHeading">
-				<span class="nino-subHeading">LATEST</span>
-				<!-- 최근 인기글 -->
-			</h2>
-			<p class="nino-sectionDesc">최근 12시간 이내에 추천을 많이 받은 게시글 입니다. </p>
-			<div class="sectionContent">
-				<div class="row nino-hoverEffect">
-					<div class="col-md-4 col-sm-4">
-						<div class="item" style="border-radius: 10px;">
-							<a class="overlay" href="#">
-								<span class="content">
-									View
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-1.jpg" alt="최근 게시글1">
-							</a>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									View
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-2.jpg" alt="최근 게시글2">
-							</a>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									View
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-3.jpg" alt="최근 게시글3">
-							</a>
-						</div>
-					</div>
-				</div><div style="padding-top: 20px; text-align: right; color: #566270;"><a href="#" class="mbttn">Show More...</a></div>
-			</div>
-		</div>
-	</section>
-	<!-- 최근 인기 글 끝-->
-	
 	<!-- 인기 글 시작 -->
 	 <section id="board">
 		<div class="container">
 			<h2 class="nino-sectionHeading">
-				<span class="nino-subHeading">Day</span>
-				<!-- 인기글 -->
+				<span class="nino-subHeading">Board</span>
 			</h2>
-			<p class="nino-sectionDesc">하루 이내에 추천을 많이 받은 게시글 항목 입니다. </p>
+			<p class="nino-sectionDesc">최근 인기글</p>
 			<div class="sectionContent">
 				<div class="row nino-hoverEffect">
 					<div class="col-md-4 col-sm-4">
@@ -194,7 +137,7 @@
 				<span class="nino-subHeading">Ranking</span>
 				<!-- 명예의 전당 -->
 			</h2>
-			<p class="nino-sectionDesc">분기동안 추천을 많이 받은 게시글 입니다. </p>
+			<p class="nino-sectionDesc">조회수가 높은 3대장 </p>
 			<div class="sectionContent">
 				<div class="row nino-hoverEffect">
 					<div class="col-md-4 col-sm-4">
