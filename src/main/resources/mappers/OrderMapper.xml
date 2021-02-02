@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mungmungjackjack.mmjj.order.mapper.OrderMapper">
+	
+	<!-- 체크 상품 리스트 -->
+	<select id="checkProduct" resultType="com.mungmungjackjack.mmjj.order.domain.ProductOrderVO">
+		SELECT	product_price * #{orderCnt}
+		FROM	product
+		WHERE	product_no = #{productNo}
+	</select> 
+	
+	<!-- 상품 주문 (결제후 주문번호 발급) -->
+	<insert id="addOrder" useGeneratedKeys="true" keyColumn="order_no" keyProperty="orderNo">
+		INSERT INTO product_order(order_no, userid, order_price, pay_type, delevery_address, order_name, order_phone)
+		VALUES(order_detail_seq.nextval, #{userid}, #{orderPrice}, #{payType}, #{deleveryAddress}, #{orderName}, #{orderPhone})
+	</insert>
+	
+	<!-- 주문 상세 등록(하나의 주문번호/ 상품마다 주문상세 발급) -->
+	<insert id="addDetail">
+		INSERT INTO order_detail(detail_no, order_no, product_no, order_cnt)
+		VALUES(order_detail_seq.nextval, #{orderNo}, #{productNo}, #{orderCnt})
+		<selectKey keyColumn="detail_no" keyProperty="detailNo" order="AFTER" resultType="String">
+			SELECT order_detail_seq.currval FROM dual
+		</selectKey>
+	</insert>
+	
+	<!-- 주문 시 상품 수량 조절 -->
+	<update id="orderProductCnt">
+		UPDATE  product
+		SET     product_cnt = product_cnt - #{orderCnt}
+		WHERE   product_no =  #{productNo}
+	</update>
+	
+	<!-- 회원 주문 목록 -->
+	<select id="listOrder" resultType="com.mungmungjackjack.mmjj.order.domain.ProductOrderVO">
+		SELECT	order_no,
+		        userid,
+		        delevery_address,
+		        order_phone,
+		        order_price,
+		        pay_type,
+		        order_date,
+		        order_useyn,
+		        order_name
+		FROM	product_order
+		WHERE	userid=#{userid}
+		AND		order_useyn='y'
+	</select>
+	
+	<!-- 회원 주문목록 삭제 -->
+	<update id="notUseOrder">
+		UPDATE	product_order
+		SET		order_useyn='n'
+		WHERE   order_no=#{orderNo}
+	</update>
+	
+	<!-- 판마자의 판매 상품 목록 -->
+	<select id="sallerProduct" resultType="com.mungmungjackjack.mmjj.product.domain.ProductVO">
+		SELECT  product_no,
+				saller_id,
+				product_name,
+				product_content,
+				product_cnt,
+				product_price,
+				delevery_price,
+				product_useyn,
+				order_cnt,
+				decode(product_cnt, 0, 'n', 'y')"sal_yn"
+		FROM    product
+		WHERE   saller_id=	(
+			                SELECT  saller_id
+			                FROM    product_saller
+			                WHERE   saller_id=#{sallerId}
+			              	)
+	</select>
+	
+	<!-- 판매자의 발주 대기 목록 -->
+	<select id="orderReady" resultType="com.mungmungjackjack.mmjj.order.domain.OrderDetailVO">
+		SELECT  o.order_no,
+		        o.product_no,
+		        o.order_cnt,
+		        o.order_confirm
+		FROM    order_detail o, (
+								SELECT  product_no
+								FROM    product
+								WHERE   saller_id=	(
+								                    SELECT  saller_id
+								                    FROM    product_saller
+								                    WHERE   saller_id=#{sallerId}
+								                    )
+								) s
+		WHERE   o.product_no=s.product_no
+		AND     order_confirm='n'
+	</select>
+	
+	<!-- 판매자의 발주된 목록 -->
+	<select id="orderShipped" resultType="com.mungmungjackjack.mmjj.order.domain.OrderDetailVO">
+		SELECT  o.order_no,
+		        o.product_no,
+		        o.order_cnt,
+		        o.order_confirm
+		FROM    order_detail o, (
+								SELECT  product_no
+								FROM    product
+								WHERE   saller_id=(
+								                    SELECT  saller_id
+								                    FROM    product_saller
+								                    WHERE   saller_id=#{sallerId}
+								                  )
+								) s
+		WHERE   o.product_no=s.product_no
+		AND     order_confirm='y'
+	</select>
+	
+	<!-- 구매자 정보 -->
+	<select id="orderInfo" resultType="com.mungmungjackjack.mmjj.order.domain.ProductOrderVO">
+	SELECT  order_no,
+	        order_name,
+	        order_phone,
+	        delevery_address
+	FROM    product_order
+	WHERE   order_no IN	(
+	                    SELECT  order_no
+	                    FROM    order_detail o, (
+	                                            SELECT  product_no
+	                                            FROM    product
+	                                            WHERE   saller_id=  (
+	                                                                SELECT  saller_id
+	                                                                FROM    product_saller
+	                                                                WHERE   saller_id=#{sellerId}
+	                                                                )
+	                                            ) s
+	                    WHERE   o.product_no=s.product_no
+	                    )
+	</select>
+	<!-- 배치 시 디테일 삭제 -->
+	<delete id="deleteDetail">
+		DELETE
+		FROM     order_detail
+		WHERE    order_no in	(
+								SELECT	order_no
+								FROM	product_order
+								WHERE	order_useyn ='n'
+								)
+	</delete>
+	<!-- 배치 시 주문 삭제 -->
+	<delete id="deleteOrder">
+		DELETE
+		FROM     product_order
+		WHERE    order_useyn='n'
+	</delete>
+</mapper>

@@ -26,8 +26,8 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index( Model model) throws Exception{
 		log.info("index.............");
-		
 		model.addAttribute("rank", service.rank());
+		model.addAttribute("monthRank", service.monthRank());
 		return "index";
 	}
 	

@@ -25,6 +25,8 @@ public interface BoardMapper {
 	public int delete(Integer bno) throws Exception;
 	// 댓글 수
 	public void updateReplyCnt(Map<String, Object> update) throws Exception;
-	// 조회수 높은 게시글
+	// 최근 한달 인기글
 	public List<BoardRankDTO> rank() throws Exception;
+	// 이달의 인기글
+	public List<BoardRankDTO> monthRank() throws Exception;
 }

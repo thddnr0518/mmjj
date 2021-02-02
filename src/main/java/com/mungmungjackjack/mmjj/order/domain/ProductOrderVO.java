@@ -13,7 +13,11 @@ public class ProductOrderVO {
 
 	private String order_no;
 	private String userid;
-	private Date order_date;
+	private String delevery_address;
+	private String order_phone;
 	private int order_price;
-	private char pay_type;
+	private String pay_type;
+	private Date order_date;
+	private String order_useyn;
+	private String order_name;
 }

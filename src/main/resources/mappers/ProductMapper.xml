@@ -6,19 +6,15 @@
 
 	<!-- 상품 등록 -->
 	<insert id="insertProduct">
-		INSERT INTO product(product_no, saller_no, product_name, product_content, product_cnt, product_price, delevery_price)
-		VALUES('p'||product_seq.nextval, #{sallerNo}, #{productName}, #{productContent}, #{productCnt}, #{productPrice}, #{deleveryPrice})
+		INSERT INTO product(product_no, product_name, saller_id, product_content, product_cnt,
+		product_price, product_img, product_thumb, delevery_price)
+		VALUES('p'||product_seq.nextval, #{productName}, #{sallerId}, #{productContent}, #{productCnt},
+		#{productPrice},#{productImg}, #{productThumb}, #{deleveryPrice})
 	</insert>
 	
 	<!-- 상품 상세 -->
-	<select id="readProduct" resultType="com.mungmungjackjack.mmjj.product.domain.ProductVO">
-		SELECT	product_no,
-				saller_no,
-				product_name,
-				product_content,
-				product_cnt,
-				product_price,
-				delevery_price
+	<select id="detailProduct" resultType="com.mungmungjackjack.mmjj.product.domain.ProductVO">
+		SELECT	*
 		FROM	product
 		WHERE	product_no=#{productNo}
 	</select>
@@ -30,7 +26,9 @@
 	          	product_content=#{productContent},
 	          	product_cnt=#{productCnt},
 	          	product_price=#{productPrice},
-	          	delevery_price=#{deleveryPrice}
+	          	delevery_price=#{deleveryPrice},
+	          	product_img=#{productImg},
+	          	product_thumb=#{productThumb}
 		WHERE   product_no=#{productNo}
 	</update>
 	
@@ -48,8 +46,10 @@
 					product_name,
 					product_price,
 					product_content,
-					saller_no,
+					saller_id,
 					product_cnt,
+					product_img,
+					product_thumb,
 					product_useyn,
 					order_cnt,
 					decode(product_cnt, 0, 'n', 'y')"sal_yn"
@@ -60,8 +60,10 @@
 							product_name,
 							product_price,
 							product_content,
-							saller_no,
+							saller_id,
 							product_cnt,
+							product_img,
+							product_thumb,
 							product_useyn,
 							order_cnt,
 							decode(product_cnt, 0, 'n', 'y')"sal_yn"
@@ -76,7 +78,7 @@
 			)
 			WHERE rn > (#{pageNum} - 1)*#{amount}
 			AND product_useyn='y'
-		ORDER BY 9 DESC, 8 DESC
+		ORDER BY 11 DESC, 10 DESC
 		]]>
     </select>
     
@@ -88,8 +90,6 @@
 		<include refid="criteria"></include>
 				product_useyn='y'
 	</select>
-	
-	<!-- 재고 0개 상품 -->
 	
 	
 	<!-- 주문시 주문 수량만큼 상품수량 감소 -->
@@ -123,11 +123,24 @@
 							product_content LIKE '%'||#{keyword}||'%'
 						</when>
 						<when test="type == 'S'.toString()">
-							saller_no LIKE '%'||#{keyword}||'%'
+							saller_id LIKE '%'||#{keyword}||'%'
 						</when>
 					</choose>
 				</trim>
 			</foreach>
 		</trim>
 	</sql>
+	
+	<!-- 상품 대표 이미지 등록 -->
+	<insert id="thumbnailRegit">
+		INSERT INTO product_attach(uuid, product_no, file_name)
+		VALUES(#{uuid}, #{productNo}, #{fileName})
+	</insert>
+	
+	<!-- 등록할 상품번호 -->
+	<select id="findByProduct" resultType="com.mungmungjackjack.mmjj.product.domain.ProductAttachVO">
+		SELECT	*
+		FROM	product_attach
+		WHERE	product_no = #{productNo}
+	</select>
 </mapper>

@@ -62,7 +62,7 @@
 		<!-- 글삭제는 회원만 -->
 		<security:intercept-url pattern="/board/remove"
 				 	access="hasRole('ROLE_MEMBER')"/>
-		
+				 	
 		<security:intercept-url pattern="/sample/member"
 				  	access="hasRole('ROLE_MEMBER')"/>
 		

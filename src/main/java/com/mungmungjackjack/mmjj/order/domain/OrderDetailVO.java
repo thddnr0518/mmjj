@@ -11,10 +11,7 @@ public class OrderDetailVO {
 
 	private String detail_no;
 	private String product_no;
-	private String order_mo;
+	private String order_no;
 	private int order_cnt;
-	private String delevery_address;
-	private String order_phone;
-	private int order_sales;
-	private String pay_type;
+	private String order_confirm;
 }

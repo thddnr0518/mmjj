@@ -1,11 +1,15 @@
 package com.mungmungjackjack.mmjj.product.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mungmungjackjack.mmjj.domain.Criteria;
+import com.mungmungjackjack.mmjj.product.domain.ProductAttachDTO;
 import com.mungmungjackjack.mmjj.product.domain.ProductDTO;
 import com.mungmungjackjack.mmjj.product.domain.ProductVO;
 import com.mungmungjackjack.mmjj.product.mapper.ProductMapper;
@@ -21,17 +25,17 @@ public class ProductServiceImpl implements IProductService{
 	public void insertProduct(ProductDTO pDto) throws Exception{
 		mapper.insertProduct(pDto);
 	}
-
+	
 	@Override
-	public ProductVO readProduct(String productNo)throws Exception {
-		
-		return mapper.readProduct(productNo);
+	public ProductVO detailProduct(String productNo)throws Exception {
+		return mapper.detailProduct(productNo);
 	}
 
 	@Override
-	public void updateProduct(ProductDTO pDto)throws Exception {
-		mapper.updateProduct(pDto);
+	public boolean updateProduct(ProductDTO pDto)throws Exception {
+		boolean updateResult = mapper.updateProduct(pDto) == 1;
 		
+		return updateResult;
 	}
 
 	@Override
@@ -41,7 +45,7 @@ public class ProductServiceImpl implements IProductService{
 	}
 
 	@Override
-	public List<ProductDTO> listProduct(Criteria cri) throws Exception {
+	public List<ProductVO> listProduct(Criteria cri) throws Exception {
 		return mapper.listProduct(cri);
 	}
 
@@ -54,6 +58,17 @@ public class ProductServiceImpl implements IProductService{
 	public void deleteProuct() throws Exception {
 		mapper.deleteProduct();
 	}
+
+	@Override
+	public Map<String, String> productAttachList(Map<String, String> map) throws Exception{
+		return mapper.findByProduct(map);
+	}
+
+	@Override
+	public void thumbnailRegit(ProductAttachDTO paDto) throws Exception{
+		mapper.thumbnailRegit(paDto);
+	}
+
 	
 
 }

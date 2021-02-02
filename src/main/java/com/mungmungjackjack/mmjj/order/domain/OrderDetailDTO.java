@@ -1,5 +1,7 @@
 package com.mungmungjackjack.mmjj.order.domain;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,7 @@ public class OrderDetailDTO {
 	private String productNo;
 	private String orderNo;
 	private int orderCnt;
-	private String deleveryAddress;
-	private String orderPhone;
-	private int orderSales;
-	private String payType;
+	private String orderConfirm;
+	
+	private List<OrderDetailDTO> orderList;
 }

@@ -13,7 +13,11 @@ public class ProductOrderDTO {
 
 	private String orderNo;
 	private String userid;
-	private Date orderDate;
+	private String deleveryAddress;
+	private String orderPhone;
 	private int orderPrice;
-	private char payType;
+	private String payType;
+	private Date orderDate;
+	private String orderUseyn;
+	private String orderName;
 }

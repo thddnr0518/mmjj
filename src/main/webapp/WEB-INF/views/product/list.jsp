@@ -18,52 +18,48 @@
 				<option value="150" <c:out value="${pageMaker.cri.amount eq '150'?'selected':'' }"/>>150개씩</option>
 			</select>
 		</form>
+		<!-- 상품 리스트 -->
 		<div class="sectionContent">
 			<div class="row nino-hoverEffect">
-			
-				<!-- 상품 리스트 반복문 시작 -->
-				<c:forEach var="product" items="${list}">
+				<c:forEach items="${list }" var="product">
 					<div class="col-md-4 col-sm-4" style="padding-top: 30px; padding-bottom: 30px;">
 						<div class="item" >
-							<a class="overlay" href="${contextPath}/product/detail/${product.product_no}">
+							<a class="overlay" href="${product.productNo}">
 								<span class="content">
 									View
 								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-1.jpg" alt="최근 게시글1">
+								<img style="width: 300px; height: 200px;" src="${contextPath }/resources${product.productThumb}" alt="최근 게시글1">
 							</a>
 						</div>
 						<div style="display: flex; font-size: 20px;">
-							<span style="flex: 1;">${product.product_name}</span>
-							<span style="flex: 1;"><fmt:formatNumber value="${product.product_price}" pattern="#,###"/>￦</span>
+							<span style="flex: 1;">${product.productName}</span>
+							<span style="flex: 1;"><fmt:formatNumber value="${product.productPrice}" pattern="#,###"/>￦</span>
 						</div>
 						<div style="display: flex; font-size: 20px;">
-							<span style="flex: 1;">남은 수량 : ${product.product_cnt}</span>
-							<span style="flex: 1;">팔린 수량 : ${product.order_cnt}</span>
+							<span style="flex: 1;">남은 수량 : ${product.productCnt}</span>
+							<span style="flex: 1;">팔린 수량 : ${product.orderCnt}</span>
 						</div>
 					</div>
 				</c:forEach>
-				<!-- 상품 리스트 반복문 끝 -->
-					
+				<!-- 페이징 시작-->
+			</div>
+			<div class='pull-right'>
+				<ul class="pagination">
+					<c:if test="${pageMaker.prev}">
+						<li class="paginate_button previous"><a href="${pageMaker.startPage -1}">Previous</a></li>
+					</c:if>
+					<c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
+						<li class="paginate_button  ${pageMaker.cri.pageNum == num ? "active":""} ">
+							<a href="${num}">${num}</a>
+						</li>
+					</c:forEach>
+					<c:if test="${pageMaker.next}">
+						<li class="paginate_button next"><a href="${pageMaker.endPage +1 }">Next</a></li>
+					</c:if>
+				</ul>
 			</div>
 		</div>
 	</div>
-<!-- 페이징 시작-->
-<div class='pull-right'>
-	<ul class="pagination">
-		<c:if test="${pageMaker.prev}">
-			<li class="paginate_button previous"><a href="${pageMaker.startPage -1}">Previous</a></li>
-		</c:if>
-		<c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
-			<li class="paginate_button  ${pageMaker.cri.pageNum == num ? "active":""} ">
-				<a href="${num}">${num}</a>
-			</li>
-		</c:forEach>
-		<c:if test="${pageMaker.next}">
-			<li class="paginate_button next"><a href="${pageMaker.endPage +1 }">Next</a></li>
-		</c:if>
-	</ul>
-</div>
-<!-- 페이징 끝-->
 </section>
 
 
@@ -102,21 +98,44 @@
 
 <script>
 $(document).ready(function(){
+	// 페이지에 표시될 상품 수가 바뀌면
 	$("#pageAmount").change(function(){
+		// 바뀌면 폼의 주소로 action
 		$("#amountFrm").submit();
 	});
 
+	
 	var actionForm = $("#actionForm");
+
+	// 페이지 버튼의 앵컬 클릭시
 	$(".paginate_button a").on("click", function(e) {
-		e.preventDefault(); // <a>태그를 클릭해도 페이지 이동이 없도록 처리
-		
+		// 앵커 클릭해도 페이지 이동이 없도록 우선 처리
+		e.preventDefault(); 
+
+		// actionForm안에 pageNum인풋을 찾고 값을 누른 앵커의 href값으로 변경 
 		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+		// 바뀐 값을 갖고 action
 		actionForm.submit();
 	});
 
+	// 상품등록 버튼 클릭시
 	$("#regBtn").click(function(){
+		// 이 주소로 진입
         location.href="${contextPath}/product/register";    
     });
+
+	// 상품디테일 진입시 
+	$(".overlay").on("click", function(e) {
+		// overlay의 이벤트를 멈추고
+		e.preventDefault(); 
+		// actionForm에 새 인풋을 생성
+		actionForm.append("<input type='hidden' name='productNo' value='"
+										+ $(this).attr("href")
+										+ "'>"); // 인풋의 값은 overlay의 href속성(${product.productNo})
+		// actionForm의 속성값을 바꾸고
+		actionForm.attr("action", "${contextPath}/product/detail");
+		actionForm.submit();
+	});
 });
 </script>
 <%@ include file="../include/footer.jsp" %>

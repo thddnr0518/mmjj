@@ -108,7 +108,7 @@ $(document).ready(function() {
 		var inputFile = $("input[name='uploadFile']");
 		    
 		var files = inputFile[0].files;
-		    
+		
 		for(var i = 0; i < files.length; i++){
 
 			if(!checkExtension(files[i].name, files[i].size) ){
@@ -145,6 +145,7 @@ $(document).ready(function() {
 	    var str ="";
 		    
 	    $(uploadResultArr).each(function(i, obj) {
+		    
 			if(obj.image){
 				var fileCallPath = encodeURIComponent(obj.uploadPath+ "/s_" + obj.uuid + "_" + obj.fileName);
 				str += "<li data-path='" + obj.uploadPath + "'";

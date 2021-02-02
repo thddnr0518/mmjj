@@ -54,6 +54,7 @@
 		</trim>
 	</sql>
 	
+	<!-- 게시글 목록 -->
 	<select id="getListWithPaging" resultType="com.mungmungjackjack.mmjj.board.domain.BoardDTO">
 		<![CDATA[
 			SELECT	bno,
@@ -86,6 +87,7 @@
 		]]>
 	</select>
 	
+	<!-- 글 총 개수 -->
 	<select id="getTotalCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM board
@@ -94,35 +96,98 @@
 		bno > 0
 	</select>
 	
+	<!-- 조회수 상승 -->
 	<update id="updateViewCnt">
-		UPDATE board
-		SET viewcnt = viewcnt + 1
-		WHERE bno = #{bno}
+		UPDATE	board
+		SET		viewcnt = viewcnt + 1
+		WHERE	bno = #{bno}
 	</update>
 	
+	<!-- 댓글수 상승 -->
 	<update id="updateReplyCnt">
 		UPDATE board
 		SET replycnt = replycnt + #{amount}
 		WHERE bno = #{bno}
 	</update>
 	
+	<!-- 한달이내에 조회수 탑3 게시글 -->
 	<select id="rank" resultType="com.mungmungjackjack.mmjj.board.domain.BoardRankDTO">
 		<![CDATA[
-			SELECT	rownum,
-					e.*
-			FROM    (SELECT b.viewcnt,
-	            			b.title,
-	            			b.bno,
-	            			b.writer,
-	            			a.uuid,
-	            			a.UPLOADPATH,
-	            			a.FILENAME
-	    			FROM    board b,
-	            			attach a
-				    WHERE   b.bno = a.bno
-				    AND		a.filetype = '1'
-				    ORDER BY b.viewcnt DESC)e
+			SELECT  rownum,
+			        e.*
+			FROM    (
+						SELECT	b.viewcnt,
+				                b.title,
+				                b.bno,
+				                b.writer,
+				                b.regdate,
+				                a.uuid,
+				                a.UPLOADPATH,
+				                a.FILENAME
+			        	FROM    board b,
+			                	(
+			                    	SELECT  a.bno,
+				                            a.uuid,
+				                            a.uploadpath,
+				                            a.filename
+			                    	FROM    (
+			                                SELECT  ROW_NUMBER() OVER(PARTITION BY attach.bno ORDER BY attach.uuid DESC ) AS RNUM, attach.*
+			                                FROM    attach
+			                                WHERE   attach.filetype = 1
+			                            	)
+			                            	a
+			                    WHERE   RNUM = 1
+			                	)
+			                	a
+			        	WHERE   b.bno = a.bno
+			        	AND		b.regdate BETWEEN	(
+			        									SELECT	add_months(sysdate, -1)
+			        									FROM	dual
+			        								)
+			        								AND sysdate
+			        	ORDER BY b.viewcnt DESC
+			        )
+			        e
 			WHERE rownum <= 3
 		]]>
 	</select>
+	
+	<!-- 12월의 인기 게시물 -->
+	<select id="monthRank" resultType="com.mungmungjackjack.mmjj.board.domain.BoardRankDTO">
+		<![CDATA[
+			SELECT  rownum,
+			        e.*
+			FROM    (
+			        SELECT  b.viewcnt,
+			                b.title,
+			                b.bno,
+			                b.writer,
+			                b.regdate,
+			                a.uuid,
+			                a.UPLOADPATH,
+			                a.FILENAME
+			        FROM    board b,
+			                (
+			                    SELECT  a.bno,
+			                            a.uuid,
+			                            a.uploadpath,
+			                            a.filename
+			                    FROM    (
+			                                SELECT  ROW_NUMBER() OVER(PARTITION BY attach.bno ORDER BY attach.uuid DESC ) AS RNUM, attach.*
+			                                FROM    attach
+			                                WHERE   attach.filetype = 1
+			                            )a
+			                    WHERE   RNUM = 1
+			                )a
+			        WHERE   b.bno = a.bno
+			        AND     b.regdate BETWEEN ( SELECT  REPLACE('20/12/05', substr('20/12/05', 7, 2), '01')
+			                                    FROM    dual)
+			                                                    AND (   SELECT  last_day('20/12/05')
+			                                                            FROM    dual)
+			        ORDER BY b.viewcnt DESC
+			        )e
+			WHERE   rownum <= 3
+		]]>
+	</select>
+	
 </mapper>

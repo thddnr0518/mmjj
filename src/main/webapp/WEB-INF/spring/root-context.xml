@@ -42,14 +42,27 @@
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	
+	<bean id="productThumbPath" class="java.lang.String">
+		<constructor-arg value="D:\\workspace\\sts_4.8.1\\mmjj\\src\\main\\webapp\\resources\\" />
+	</bean>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600"/>
+		<property name="maxInMemorySize" value="102400"/>
+		<property name="defaultEncoding" value="utf-8"/>
+	</bean>
+		
+	
 	<tx:annotation-driven/>
 	<task:annotation-driven/>
 	
 	<context:component-scan base-package="com.mungmungjackjack.mmjj.task"></context:component-scan>
 	<context:component-scan base-package="com.mungmungjackjack.mmjj"></context:component-scan>
+	<context:component-scan base-package="com.mungmungjackjack.mmjj.util"></context:component-scan>
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.board.mapper"/>	
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.member.mapper"/>
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.reply.mapper"/>
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.product.mapper"/>
 	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.cart.mapper"/>
+	<mybatis-spring:scan base-package="com.mungmungjackjack.mmjj.order.mapper"/>
 </beans>

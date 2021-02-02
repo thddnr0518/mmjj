@@ -8,6 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>1111</h1>
 	<h4><c:out value="${exception.getMessage() }"></c:out> </h4>
 	<ul>
 		<c:forEach items="${exception.getStackTrace() }" var="stack">

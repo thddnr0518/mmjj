@@ -33,18 +33,16 @@
 		</div>
 	</div> --%>
 	
- <!-- Wrapper for slides -->
+ <!-- 한달 이내 인기글 시작 -->
 	<div class="carousel-inner" role="listbox">
 		<c:forEach items="${rank}" var="rank" varStatus="status">
 			<div class="item ${ status.first ? 'active' : ''}">
 				<h2 class="nino-sectionHeading" >
 					<span class="nino-subHeading">
-						<img alt="등수 이미지" src="${contextPath}/resources/img/${status.count }.png" width="30px" height="30px">
+						<img class="rankImg" alt="등수 이미지" src="${contextPath}/resources/img/${status.count }.png">
 						${rank.title}
 					</span>
-					<div style="width: 300px; height: 200px; margin: 0 auto;" class="preview4">
-						<img alt="랭크이미지" style="width: 100%; height: 100%;" src="${contextPath}${rank.imgSrc}${rank.uploadPath}\s_${rank.uuid}_${rank.fileName}" >
-					</div>
+					<img class="preview3" alt="랭크이미지"  src="${contextPath}${rank.imgSrc}${rank.uploadPath}\s_${rank.uuid}_${rank.fileName}" >
 				</h2>
 				<a href="${contextPath}/board/read?bno=${rank.bno}" class="bttn">Go to Show</a>
 			</div>
@@ -57,7 +55,7 @@
 			<a href="#" class="bttn">Go to Park</a>
 		</div>
 	</div>
-	 
+<!-- 한달 이내 인기글 끝 -->	 
 	
 	<!-- Indicators -->
 	<ol class="carousel-indicators clearfix">
@@ -84,93 +82,66 @@
 	</ol>
 </section>
 </header>
+
+
 	<!-- MMJJ 시작 -->
-	<!-- 인기 글 시작 -->
+	<!-- 그달의 인기글 시작 -->
 	 <section id="board">
 		<div class="container">
 			<h2 class="nino-sectionHeading">
-				<span class="nino-subHeading">Board</span>
+				<span class="nino-subHeading"></span>
 			</h2>
-			<p class="nino-sectionDesc">최근 인기글</p>
+			<p class="nino-sectionDesc">전달의 인기글 탑3</p>
 			<div class="sectionContent">
 				<div class="row nino-hoverEffect">
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									View
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-1.jpg" alt="최근 게시글1">
-							</a>
+					<c:forEach items="${monthRank}" var="monthRank" varStatus="status">
+						<div class="col-md-4 col-sm-4">
+							<div class="item ${ status.first ? 'active' : ''}">
+								<a class="overlay" href="${contextPath}/board/read?bno=${monthRank.bno}">
+									<span class="content">
+										View
+									</span>
+									<img style="width: 300px; height: 200px;" src="${contextPath}${monthRank.imgSrc}${monthRank.uploadPath}\s_${monthRank.uuid}_${monthRank.fileName}" alt="최근 게시글1">
+								</a>
+							</div>
 						</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									View
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-2.jpg" alt="최근 게시글2">
-							</a>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									View
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-3.jpg" alt="최근 게시글3">
-							</a>
-						</div>
-					</div>
-				</div><div style="padding-top: 20px; text-align: right; color: #566270;"><a href="${contextPath }/board/list" class="mbttn">Show More...</a></div>
+					</c:forEach>
+				</div>
+				<div style="padding-top: 20px; text-align: right; color: #566270;">
+					<a href="${contextPath }/board/list" class="mbttn">Show More...</a>
+				</div>
 			</div>
 		</div>		
 	</section>
-	<!-- 인기 글 끝 -->
+	<!-- 그 달의 인기글 끝 -->
 	
 	<!-- 랭킹 높은 게시글 시작 -->
 	 <section id="ranking">
 		<div class="container">
 			<h2 class="nino-sectionHeading">
-				<span class="nino-subHeading">Ranking</span>
+				<span class="nino-subHeading">MMJJ Ranking</span>
 				<!-- 명예의 전당 -->
 			</h2>
-			<p class="nino-sectionDesc">조회수가 높은 3대장 </p>
+			<p class="nino-sectionDesc">각 부문 랭킹 3대장 </p>
 			<div class="sectionContent">
 				<div class="row nino-hoverEffect">
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									First
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-1.jpg" alt="최근 게시글1">
-							</a>
+			
+					<c:forEach items="${rank}" var="rank" varStatus="status">
+						<div class="col-md-4 col-sm-4">
+							<div class="item ${ status.first ? 'active' : ''}">
+								<a class="overlay" href="${contextPath}/board/read?bno=${rank.bno}">
+									<span class="content">
+										View
+									</span>
+									<img style="margin: 0 auto;" width="300px" height="200px" src="${contextPath}${rank.imgSrc}${rank.uploadPath}\s_${rank.uuid}_${rank.fileName}" alt="최근 게시글1">
+								</a>
+							</div>
 						</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									Second
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-2.jpg" alt="최근 게시글2">
-							</a>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									Third
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-3.jpg" alt="최근 게시글3">
-							</a>
-						</div>
-					</div>
-				</div><div style="padding-top: 20px; text-align: right; color: #566270;"><a href="#" class="mbttn">Show More...</a></div>
+					</c:forEach>
+				</div>
+				<div style="padding-top: 20px; text-align: right; color: #566270;">
+					<a href="${contextPath }/rank" class="mbttn">Show More...</a>
+				</div>
 			</div>
 		</div>		
 	</section>	
@@ -183,40 +154,26 @@
 			<h2 class="nino-sectionHeading">
 				<span class="nino-subHeading">Shop</span>
 			</h2>
-			<p class="nino-sectionDesc">분기동안 추천을 많이 받은 게시글 입니다. </p>
+			<p class="nino-sectionDesc">매출 3대장</p>
 			<div class="sectionContent">
 				<div class="row nino-hoverEffect">
+					<c:forEach items="${rank}" var="rank" varStatus="status">
 					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
+					<img alt="등수 이미지" src="${contextPath}/resources/img/${status.count }.png" class="rankImg">
+						<div class="item ${ status.first ? 'active' : ''}">
+							<a class="overlay" href="${contextPath}/board/read?bno=${rank.bno}">
 								<span class="content">
-									First
+									${rank.title}
 								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-1.jpg" alt="최근 게시글1">
+								<img class="preview3" src="${contextPath}${rank.imgSrc}${rank.uploadPath}\s_${rank.uuid}_${rank.fileName}" alt="최근 게시글1">
 							</a>
 						</div>
 					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									Second
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-2.jpg" alt="최근 게시글2">
-							</a>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<div class="item">
-							<a class="overlay" href="#">
-								<span class="content">
-									Third
-								</span>
-								<img src="${contextPath }/resources/mogo/images/story/img-3.jpg" alt="최근 게시글3">
-							</a>
-						</div>
-					</div>
-				</div><div style="padding-top: 20px; text-align: right; color: #566270;"><a href="${contextPath }/product/list" class="mbttn">Show More...</a></div>
+					</c:forEach>
+				</div>
+				<div style="padding-top: 20px; text-align: right; color: #566270;">
+					<a href="${contextPath }/product/list" class="mbttn">Show More...</a>
+				</div>
 			</div>
 		</div>		
 	</section>	

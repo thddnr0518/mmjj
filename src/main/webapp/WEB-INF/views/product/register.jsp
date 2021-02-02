@@ -50,6 +50,15 @@
 	.bigPicutre img {
 		width: 600px;
 	}
+	
+	.select_img img {
+		margin: 20px 0;
+	}
+	
+	input:invalid {
+		border: 3px solid red;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -75,13 +84,14 @@ function fileCheck(obj){
 <script type="text/javascript">
 $(document).ready(function() {
 	var formObj = $("form[role='form']");
+
 	
 	$("button[type='submit']").on("click", function(e){
 		e.preventDefault();
 		    
 		console.log("submit clicked");
 		var str = "";
-		    
+
 		$(".uploadResult ul li").each(function(i, obj){
 			var jobj = $(obj);
 		      
@@ -99,16 +109,19 @@ $(document).ready(function() {
 		formObj.append(str).submit();
 	});
 		  
-	var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 	var maxSize = 5242880; //5MB
 
-	function checkExtension(obj) {
+	function checkExtension(fileName, fileSize) {
 		
-		fileType = obj.type.substring(0,5);
-
-		if(fileType=="image"){
+		pathpoint = fileName.lastIndexOf('.');
+		filepoint = fileName.substring(pathpoint+1,fileName.length);
+		fileType = filepoint.toLowerCase();
+		
+		console.log(fileType);
+		
+		if(fileType=='jpg'||fileType=='gif'||fileType=='png'||fileType=='jpeg'){
 			
-		}else if(fileType=='bmp'){
+		} else if(fileType=='bmp') {
 			
 			upload = confirm('BMP 파일은 웹상에서 사용하기엔 적절한 이미지가 아닙니다. \n그래도 계속 하시겠습니까?');
 			
@@ -118,14 +131,14 @@ $(document).ready(function() {
 				
 				return false;
 			}
-		}else if(obj.size >= maxSize) {
+		} else if(fileSize >= maxSize) {
 			
 			alert("파일 사이즈 초과");
 			
 			$("input[type='file']").val("");
 			
 			return false;
-		}else{
+		} else {
 			
 			alert("이미지 파일만 선택할 수 있습니다.");
 			
@@ -140,20 +153,19 @@ $(document).ready(function() {
 	var csrfHeaderName = "${_csrf.headerName}";
 	var csrfTokenValue = "${_csrf.token}";
 	
-	$("input[type='file']").change(function(e){
+	$("input[name='thumbUploadFile']").change(function(e){
 		
 		var formData = new FormData();
-		    
-		var inputFile = $("input[name='uploadFile']");
-
-		var files = inputFile[0].files;
 		
+		var inputFile = $("input[name='thumbUploadFile']");
+		
+		var files = inputFile[0].files;
 		
 		if(!checkExtension(files[0]) ){
 			return false;
 		}
 		
-		formData.append("uploadFile", files[0]);
+		formData.append("thumbUploadFile", files);
 		
 		$.ajax({
 			url: "${contextPath}/oneUploadAjaxAction",
@@ -169,43 +181,119 @@ $(document).ready(function() {
 				showUploadResult(result); // 업로드 결과 처리 함수
 			}
 		}); //$.ajax
-	});  
+	}); 
+	$("input[name='uploadFile']").change(function(e){
+		
+		var formData = new FormData();
+		
+		var inputFile = $("input[name='uploadFile']");
+		
+		var files = inputFile[0].files;
+		
+		for(var i = 0; i < files.length; i++){
 
-	function showUploadResult(obj) {
-		    
-	    if(!obj || obj.length == 0) { 
+			if(!checkExtension(files[i].name, files[i].size) ){
+				return false;
+			}
+			
+			formData.append("uploadFile", files[i]);
+		}
+		
+		$.ajax({
+			url: "${contextPath}/uploadAjaxAction",
+			processData: false, 
+			contentType: false,
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+			},
+			data: formData,
+			type: "POST",
+			dataType:"json",
+			success: function(result){
+				showUploadResult(result); // 업로드 결과 처리 함수
+			}
+		}); //$.ajax
+	});
+	
+	// 썸네일 이미지 미리보기
+	function showThumbUploadResult(uploadResultArr) {
+		
+	    if(!uploadResultArr || uploadResultArr.length == 0) { 
 	    	return;
 	    }
 		    
 	    var uploadUL = $(".uploadResult ul");
 	    var str ="";
+
+	    $(uploadResultArr).each(function(i, obj) {
+			if(obj.image){
+				var fileCallPath = encodeURIComponent(obj.uploadPath+ "/s_" + obj.uuid + "_" + obj.fileName);
+				str += "<li data-path='" + obj.uploadPath + "'";
+				str +=" data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'"
+				str +" ><div>";
+				str += "<span> " + obj.fileName + "</span>";
+				str += "<button type='button' data-file=\'" + fileCallPath + "\' "
+				str += "data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src='${contextPath}/display?fileName=" + fileCallPath + "'>";
+				str += "</div>";
+				str +"</li>";
+			} else {
+				var fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);			      
+			    var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+				      
+				str += "<li "
+				str += "data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "' ><div>";
+				str += "<span> " + obj.fileName + "</span>";
+				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file' " 
+				str += "class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src='${contextPath}/resources/img/attach.png'></a>";
+				str += "</div>";
+				str +"</li>";
+				alert("이미지파일만 가능합니다.");
+				return;
+			}
+	    });
 		    
-		if(obj.image){
-			var fileCallPath = encodeURIComponent(obj.uploadPath+ "/s_" + obj.uuid + "_" + obj.fileName);
-			str += "<li data-path='" + obj.uploadPath + "'";
-			str +=" data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'"
-			str +" ><div>";
-			str += "<span> " + obj.fileName + "</span>";
-			str += "<button type='button' data-file=\'" + fileCallPath + "\' "
-			str += "data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
-			str += "<img src='${contextPath}/display?fileName=" + fileCallPath + "'>";
-			str += "</div>";
-			str +"</li>";
-		} else {
-			var fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);			      
-		    var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
-			      
-			str += "<li "
-			str += "data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "' ><div>";
-			str += "<span> " + obj.fileName + "</span>";
-			str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file' " 
-			str += "class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
-			str += "<img src='${contextPath}/resources/img/attach.png'></a>";
-			str += "</div>";
-			str +"</li>";
-			alert("이미지파일만 가능합니다.");
-			return;
-		}
+		uploadUL.append(str);
+	}
+	// 일반 이미지 미리보기
+	function showUploadResult(uploadResultArr) {
+		
+	    if(!uploadResultArr || uploadResultArr.length == 0) { 
+	    	return;
+	    }
+		    
+	    var uploadUL = $(".uploadResult ul");
+	    var str ="";
+
+	    $(uploadResultArr).each(function(i, obj) {
+			if(obj.image){
+				var fileCallPath = encodeURIComponent(obj.uploadPath+ "/s_" + obj.uuid + "_" + obj.fileName);
+				str += "<li data-path='" + obj.uploadPath + "'";
+				str +=" data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'"
+				str +" ><div>";
+				str += "<span> " + obj.fileName + "</span>";
+				str += "<button type='button' data-file=\'" + fileCallPath + "\' "
+				str += "data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src='${contextPath}/display?fileName=" + fileCallPath + "'>";
+				str += "</div>";
+				str +"</li>";
+			} else {
+				var fileCallPath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);			      
+			    var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+				      
+				str += "<li "
+				str += "data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "' ><div>";
+				str += "<span> " + obj.fileName + "</span>";
+				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file' " 
+				str += "class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src='${contextPath}/resources/img/attach.png'></a>";
+				str += "</div>";
+				str +"</li>";
+				alert("이미지파일만 가능합니다.");
+				return;
+			}
+	    });
 		    
 		uploadUL.append(str);
 	}
@@ -234,67 +322,100 @@ $(document).ready(function() {
 		}); //$.ajax
 	});
 
+	// 대표이미지 미리보기
+	$("#productImg").change(function(){
+		
+		if(this.files && this.files[0]) {
+			
+			var reader = new FileReader;
+			
+			reader.onload = function(data) {
+				$(".select_img img").attr("src", data.target.result).width(150);   
+				$(".select_img img").attr("src", data.target.result).height(150);  
+			}
+		reader.readAsDataURL(this.files[0]);
+		}
+	});
 });
 </script>
 		</div>
 	</header>
+	
+	
 <section>
-
-<div class="customBoard">
-    <div class="panel panel-default">
-
-      <div class="panel-heading">Product Register</div>
-      <!-- /.panel-heading -->
-      <div class="panel-body">
-
-        <form role="form" action="${contextPath}/product/register" method="post">
-        
-			<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
-			
-			<div class="form-group">
-			  <label>상품명</label> <input class="form-control" name="prodName" maxlength="66">
+	<form role="form" action="${contextPath}/product/register?${_csrf.parameterName}=${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data" id="pro">
+		<div class="customBoard">
+			<div class="customBoard1">
+				<div class="customBoard2">
+					대표 이미지<br>
+					<input type="file" style="margin: 0 auto;" id="productImg" name="file" accept="image/*">
+				</div>
+				<div class="customBoard3" style="text-align: center">
+					<div class="select_img">
+						<img src="" />
+					</div>
+				</div>
 			</div>
 			
-			<div class="form-group">
-			  <label>상품 설명</label>
-			  <textarea class="form-control" rows="3" name="prodContent" maxlength="333"></textarea>
+			<div class="customBoard1" style="margin-top: 10px;">
+				<div class="customBoard2">
+					일반 이미지<br>
+					<input style="margin: 0 auto;" type="file" name="uploadFile" multiple="multiple" accept="image/*">
+				</div>
+				<div class="customBoard3">
+					<div class="uploadResult"> 
+						<ul>
+						
+						</ul>
+			        </div>
+				</div>
 			</div>
-			
-			<div class="form-group">
-			  <label>Writer</label> <input class="form-control" name="writer"
-			  value='<sec:authentication property="principal.username"/>' readonly="readonly">
-			</div>
-			<button type="submit" class="btn btn-default">Submit
-			  Button</button>
-			<button type="reset" class="btn btn-default">Reset Button</button>
-        </form>
+		</div>
 
-      </div>
-
-    </div>
-</div>
-
-<div class="customBoard">
-    <div class="panel panel-default">
-
-      <div class="panel-heading">File Attach</div>
-      <!-- /.panel-heading -->
-      <div class="panel-body">
-        <div class="form-group uploadDiv">
-            <input type="file" name="uploadFile" multiple accept="image/*">
-        </div>
-        
-        <div class="uploadResult"> 
-          <ul>
-          
-          </ul>
-        </div>
-        
-        
-      </div>
-
-    </div>
-</div>
+		<div class="customBoard">
+		    <div class="panel panel-default">
+		      
+		      <!-- /.panel-heading -->
+		      <div class="panel-body">
+		
+					<div class="form-group">
+						<label for="productName">상품명</label>
+						<input name="productName" maxlength="66" class="form-control">
+					</div>
+		
+					<div class="form-group">
+						<label for="productPrice">상품가격</label>
+						<input name="productPrice" type="number" min="5" max="9999" class="form-control">
+					</div>
+					
+					<div class="form-group">
+						<label for="productCnt">상품수량</label>
+						<input name="productCnt" type="number" min="50" max="99999" step="50" class="form-control">
+					</div>
+					
+					<div class="form-group">
+						<label for="deleberyPrice">배송비</label>
+						<input name="deleberyPrice" type="number" min="0" max="99" class="form-control" >
+					</div>
+					
+					<div class="form-group">
+					  	<label for="productContent">상품소개</label>
+					  	<textarea name="productContent" maxlength="333" class="form-control" rows="3"></textarea>
+					</div>
+					
+					<div class="form-group">
+						<label>판매회사</label>
+						<input name="sallerId" value='<sec:authentication property="principal.username" />'class="form-control" readonly="readonly" type="text">
+					</div>
+					<button type="submit" class="btn btn-default">Submit
+					  Button</button>
+					<button type="reset" class="btn btn-default">Reset Button</button>
+		
+		      </div>
+		
+		    </div>
+		</div>
+	</form>
 </section>
 
 <%@include file="../include/footer.jsp"%>

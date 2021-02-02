@@ -103,4 +103,9 @@ public class BoardServiceImpl implements IBoardService{
 		return mapper.rank();
 	}
 
+	@Override
+	public List<BoardRankDTO> monthRank() throws Exception {
+		return mapper.monthRank();
+	}
+
 }

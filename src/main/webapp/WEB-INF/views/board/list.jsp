@@ -28,15 +28,18 @@
 				        	<c:forEach items="${list }" var="board">
 								<tr>
 									<td>${board.bno }</td>
-									<td><a class="move" href="${board.bno}">${board.title} 
-										<c:choose>
-											<c:when test="${board.replycnt > 0 }">
-												<b> [${board.replycnt }]</b>
-											</c:when>
-											<c:otherwise>
-											</c:otherwise>
-										</c:choose>
-									</a></td>
+									<td>
+										<a class="move" href="${board.bno}">
+											${board.title} 
+											<c:choose>
+												<c:when test="${board.replycnt > 0 }">
+													<b> [${board.replycnt }]</b>
+												</c:when>
+												<c:otherwise>
+												</c:otherwise>
+											</c:choose>
+										</a>
+									</td>
 								<td>${board.writer}</td>
 								<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${board.regdate}"/></td>
 								<td><span class="badge bg-ref">${board.viewcnt}</span></td>
