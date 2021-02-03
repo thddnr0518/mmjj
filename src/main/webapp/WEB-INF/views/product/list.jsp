@@ -103,7 +103,6 @@ $(document).ready(function(){
 		// 바뀌면 폼의 주소로 action
 		$("#amountFrm").submit();
 	});
-
 	
 	var actionForm = $("#actionForm");
 

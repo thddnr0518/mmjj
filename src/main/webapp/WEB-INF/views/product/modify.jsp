@@ -50,6 +50,7 @@
 	.bigPicutre img {
 		width: 600px;
 	}
+	
 </style>
 
 <script type="text/javascript">
@@ -71,7 +72,63 @@ function fileCheck(obj){
 	}
 }
 </script>
-
+<script type="text/javascript">
+$(document).ready(function() {
+	var formObj = $("#modifyForm");
+	
+	$("button").on("click", function(e) {
+		e.preventDefault(); 
+		 
+		var operation = $(this).data("oper");
+		 
+		console.log(operation);
+		 
+		if(operation === "remove") {
+			formObj.attr("action", "${contextPath}/product/remove");
+		} else if(operation === "list") {
+			//move to list
+			formObj.attr("action", "${contextPath}/product/list").attr("method","get");
+			
+			var pageNumTag = $("input[name='pageNum']").clone();
+			var amountTag = $("input[name='amount']").clone();
+			var keywordTag = $("input[name='keyword']").clone();
+			var typeTag = $("input[name='type']").clone();
+			
+			formObj.empty();
+			
+			formObj.append(pageNumTag);
+			formObj.append(amountTag);
+			formObj.append(keywordTag);
+			formObj.append(typeTag);
+			//self.location = "${contextPath}/board/list";
+		
+			//return;      
+		} else if (operation === "modify") {
+			
+	        console.log("submit clicked");
+	        
+	        var str = "";
+	        
+	        $(".uploadResult ul li").each(function(i, obj){
+	          
+	          var jobj = $(obj);
+	          
+	          console.dir(jobj);
+	          
+	          str += "<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("filename")+"'>";
+	          str += "<input type='hidden' name='attachList["+i+"].uuid' value='"+jobj.data("uuid")+"'>";
+	          str += "<input type='hidden' name='attachList["+i+"].uploadPath' value='"+jobj.data("path")+"'>";
+	          str += "<input type='hidden' name='attachList["+i+"].filetype' value='"+ jobj.data("type")+"'>";
+	          
+	        });
+	        
+	        formObj.append(str).submit();
+		}
+		
+		formObj.submit();
+	});
+});
+</script>
 <script type="text/javascript">
 $(document).ready(function() {
 	var formObj = $("form[role='form']");
@@ -261,7 +318,16 @@ $(document).ready(function() {
 		</div>
 	</header>
 <section>
-	<form role="form" action="${contextPath}/product/register?${_csrf.parameterName}=${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data" id="pro">
+	<form role="form" action="${contextPath}/product/modify?${_csrf.parameterName}=${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data" id="modifyForm">
+	
+		<input type="hidden" name="productNo" value="${pDto.productNo}">
+		<input type="hidden" name="productImg" value="${pDto.productImg}">
+		<input type="hidden" name="productThumb" value="${pDto.productThumb}">
+		<input type="hidden" name="pageNum" value="${cri.pageNum}">
+		<input type="hidden" name="amount" value="${cri.amount}">
+		<input type="hidden" name="type" value="${cri.type}">
+		<input type="hidden" name="keyword" value="${cri.keyword}">
+		
 		<div class="customBoard">
 			<div class="customBoard1">
 				<div class="customBoard2">
@@ -270,12 +336,12 @@ $(document).ready(function() {
 						대표이미지
 							<img src="${contextPath}/resources/img/gallery-icon.png" alt="파일 찾기">
 						</label>
-						<input type="file" id="productImg" name="file" accept="image/*">
+						<input type="file" id="productImg" name="file" accept="image/*" >
 					</div>
 				</div>
 				<div class="customBoard3">
 					<div class="select_img" >
-						<img src=""/>
+						<img src="${contextPath}/resources${pDto.productThumb}" style="width: 130px; height: 130px;"/>
 					</div>
 				</div>
 			</div>
@@ -308,27 +374,27 @@ $(document).ready(function() {
 		
 					<div class="form-group">
 						<label for="productName">상품명</label>
-						<input name="productName" maxlength="66" class="form-control">
+						<input name="productName" maxlength="66" class="form-control" value="${pDto.productName }">
 					</div>
 		
 					<div class="form-group">
 						<label for="productPrice">상품가격</label>
-						<input name="productPrice" type="number" min="5" max="9999" class="form-control">
+						<input name="productPrice" type="number" min="5" max="9999" class="form-control" value="${pDto.productPrice }">
 					</div>
 					
 					<div class="form-group">
 						<label for="productCnt">상품수량</label>
-						<input name="productCnt" type="number" min="50" max="99999" step="50" class="form-control">
+						<input name="productCnt" type="number" min="50" max="99999" step="50" class="form-control" value="${pDto.productCnt }">
 					</div>
 					
 					<div class="form-group">
-						<label for="deleberyPrice">배송비</label>
-						<input name="deleberyPrice" type="number" min="0" max="99" class="form-control" >
+						<label for="deleveryPrice">배송비</label>
+						<input name="deleveryPrice" type="number" min="0" max="99" class="form-control" value="${pDto.deleveryPrice }">
 					</div>
 					
 					<div class="form-group">
 					  	<label for="productContent">상품소개</label>
-					  	<textarea name="productContent" maxlength="333" class="form-control" rows="3">
+					  	<textarea name="productContent" maxlength="333" class="form-control" rows="3">${pDto.productContent }
 					  	</textarea>
 					</div>
 					
@@ -336,9 +402,15 @@ $(document).ready(function() {
 						<label>판매회사</label>
 						<input name="sallerId" value='<sec:authentication property="principal.username" />'class="form-control" readonly="readonly" type="text">
 					</div>
-					<button type="submit" class="btn btn-default">Submit
-					  Button</button>
-					<button type="reset" class="btn btn-default">Reset Button</button>
+					
+					<sec:authentication property="principal" var="prin"/>
+					<sec:authorize access="isAuthenticated()">
+						<c:if test="${prin.username eq pDto.sallerId }">
+							<button type="submit" data-oper="modify" class="btn btn-default">Modify</button>
+							<button type="submit" data-oper="remove" class="btn btn-danger">Remove</button>
+						</c:if>
+					</sec:authorize>		
+					<button type="submit" data-oper="list" class="btn btn-info">List</button>
 		      </div>
 		
 		    </div>

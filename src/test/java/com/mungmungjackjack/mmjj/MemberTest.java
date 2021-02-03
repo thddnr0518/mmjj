@@ -24,22 +24,30 @@ public class MemberTest {
 	@Autowired
 	private MemberMapper mapper;
 	
+//	@Test
+//	public void jointest() {
+//		MemberDTO mDto = new MemberDTO();
+//		mDto.setUserid("admin0");
+//		mDto.setUserpw(pwen.encode("pw00"));
+//		mDto.setNickName("admin");
+//		mDto.setEmail("email@email.com");
+//		mDto.setUserName("어드민");
+//		mDto.setBirth("19950505");
+//		mDto.setGender("M");
+//		mDto.setZipNum("5050");
+//		mDto.setAddr("한경빌딩");
+//		mDto.setPhone("01010101010");
+//		
+//		mapper.insertMem(mDto);
+//		mapper.addauth("admin0");
+//		mapper.authMem("admin0");
+//	}
+	
 	@Test
-	public void jointest() {
-		MemberDTO mDto = new MemberDTO();
-		mDto.setUserid("admin0");
-		mDto.setUserpw(pwen.encode("pw00"));
-		mDto.setNickName("admin");
-		mDto.setEmail("email@email.com");
-		mDto.setUserName("어드민");
-		mDto.setBirth("19950505");
-		mDto.setGender("M");
-		mDto.setZipNum("5050");
-		mDto.setAddr("한경빌딩");
-		mDto.setPhone("01010101010");
+	public void idChkTest() {
+		String id = "dkdkasd";
+		boolean result = mapper.idChk(id) == null;
 		
-		mapper.insertMem(mDto);
-		mapper.addauth("admin0");
-		mapper.authMem("admin0");
+		log.info("result false는 중복, true는 사용가능 --> " + result);
 	}
 }

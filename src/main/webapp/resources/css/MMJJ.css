@@ -4,9 +4,8 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700';
 @import 'https://fonts.googleapis.com/css?family=Kaushan+Script';
 .rankImg {
-	 width : 30px;
-	 height : 30px;
-	
+	width : 30px;
+	height : 30px;
 }
 .preview3{
 	width: 300px;
@@ -34,11 +33,38 @@
 	background-color: #ddd;
 }
 .customBoard3 {
+	vertical-align: middle;
 	display: table-cell;
 	width: 70%;
 	background-color: #fff;
 	border: 0 1px 0 0 solid;
 	border-radius: 5px;
+	text-align: center;
+	height: 150px;
+}
+.file_box {
+	width: 100px;
+	height: 100px;
+	margin: 0 auto;
+}
+.file_box input[type="file"] {
+	position: absolute;
+	overflow: hidden;
+	clip:rect(0,0,0,0);
+	border: 0;
+}
+.file_box label {
+	margin: 0 auto;
+	cursor: pointer;
+}
+.select_img {
+	height: 150px;
+}
+.select_img img {
+	margin: 10px 10px;
+}
+input:invalid {
+	border: 3px solid red;
 }
 html, body {
 	line-height: 1.7;

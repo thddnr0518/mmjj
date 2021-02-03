@@ -23,12 +23,12 @@
 	<update id="updateProduct">
 		UPDATE	product
 		SET		product_name=#{productName},
-	          	product_content=#{productContent},
+	          	product_img=#{productImg},
+	          	product_thumb=#{productThumb},
 	          	product_cnt=#{productCnt},
 	          	product_price=#{productPrice},
 	          	delevery_price=#{deleveryPrice},
-	          	product_img=#{productImg},
-	          	product_thumb=#{productThumb}
+	          	product_content=#{productContent}
 		WHERE   product_no=#{productNo}
 	</update>
 	

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -125,11 +126,11 @@ public class ProductController {
 	}
 	
 	//상품 디테일 , 수정 페이지 진입
-	@RequestMapping(value = {"/detail", "/update"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/detail", "/modify"}, method = RequestMethod.GET)
 	public void detailGet(@RequestParam("productNo") String productNo, @ModelAttribute("cri") Criteria cri, Model model)throws Exception {
 		
 		log.info("product detail, update ............GET");
-		log.info("product : " + productNo);
+		log.info("productNo : " + productNo);
 		
 		// 진입할 상품번호를 기준으로 데이터 반환받기
 		ProductVO pVO =  service.detailProduct(productNo);
@@ -172,8 +173,37 @@ public class ProductController {
 	// 상품수정
 	@PreAuthorize("principal.username == #pDto.sallerId")
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public String updatePOST(ProductDTO pDto, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) throws Exception {
-		log.info("modify ..............POST" + service.updateProduct(pDto));
+	public String updatePOST(ProductDTO pDto,HttpServletRequest request, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, MultipartFile file) throws Exception {
+		log.info("modify ..............POST");
+		
+		log.info("pDto : " + pDto);
+		
+		// 새로운 파일이 등록되었는지 확인
+		if (file.getOriginalFilename() != null && !file.getOriginalFilename().equals("")) {
+			// 기존 파일 삭제
+			new File(uploadPath + request.getParameter("productImg")).delete();
+			new File(uploadPath + request.getParameter("productThumb")).delete();
+			
+			// 새로운 파일 등록
+			String imgUploadPath = uploadPath + File.separator + "productThumb";
+			String ymdPath = UploadFileUtils.calcPath(imgUploadPath);
+			String fileName = null;
+			
+			log.info("ProductDTO : " + pDto);
+			log.info("imgUploadPath : " + imgUploadPath);
+			log.info("ymdPath : " + ymdPath);
+			
+			pDto.setProductImg(File.separator + "productThumb" + ymdPath + File.separator + fileName);
+			pDto.setProductThumb(File.separator + "productThumb" + ymdPath + File.separator + "s" + File.separator + "s_" + fileName);
+			
+		} else { // 새로운 파일이 등록되지 않았다면
+			// 기존 이미지로 그대로 사용
+			pDto.setProductImg(request.getParameter("productImg"));
+			pDto.setProductThumb(request.getParameter("productThumb"));
+		}
+		
+
+		log.info("updateProduct : " + service.updateProduct(pDto));
 		
 		if (service.updateProduct(pDto)) {
 			rttr.addFlashAttribute("result", "success");
