@@ -162,7 +162,7 @@ $(document).ready(function() {
 			//return;      
 		} else if (operation === "modify") {
 			
-	        console.log("submit clicked");
+	        console.log("submit modify clicked");
 	        
 	        var str = "";
 	        
@@ -279,10 +279,11 @@ $(document).ready(function() {
     }
     
     $.ajax({
-      url: "${contextPath}/uploadAjaxAction",
-      processData: false, 
-      contentType: false,
-      data: formData,type: "POST",
+		url: "${contextPath}/uploadAjaxAction",
+		processData: false, 
+		contentType: false,
+		data: formData,
+		type: "POST",
 		beforeSend: function(xhr){
 			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
 		},

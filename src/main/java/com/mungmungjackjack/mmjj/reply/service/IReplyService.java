@@ -7,8 +7,11 @@ import com.mungmungjackjack.mmjj.reply.domain.ReplyDTO;
 import com.mungmungjackjack.mmjj.reply.domain.ReplyPageDTO;
 
 public interface IReplyService {
+	
 	public int register(ReplyDTO replyDto);
+	
 	public ReplyDTO read(int rno);
+	
 	public int modify(ReplyDTO replyDto);
 	
 	public int remove(int rno);

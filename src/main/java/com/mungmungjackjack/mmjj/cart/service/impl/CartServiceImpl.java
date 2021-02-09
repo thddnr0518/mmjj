@@ -1,6 +1,7 @@
 package com.mungmungjackjack.mmjj.cart.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,13 @@ public class CartServiceImpl implements ICartService{
 	}
 
 	@Override
-	public void addCart(CartDTO cDto) {
-		mapper.addCart(cDto);
+	public int addCart(CartDTO cDto) {
+		return mapper.addCart(cDto);
 	}
 
 	@Override
-	public void deleteCart(String cartNo) {
-		mapper.deleteCart(cartNo);
+	public int deleteCart(Map<String, Object> cart) {
+		return mapper.deleteCart(cart);
 	}
 
 	@Override

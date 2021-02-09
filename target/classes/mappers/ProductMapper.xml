@@ -131,12 +131,6 @@
 		</trim>
 	</sql>
 	
-	<!-- 상품 대표 이미지 등록 -->
-	<insert id="thumbnailRegit">
-		INSERT INTO product_attach(uuid, product_no, file_name)
-		VALUES(#{uuid}, #{productNo}, #{fileName})
-	</insert>
-	
 	<!-- 등록할 상품번호 -->
 	<select id="findByProduct" resultType="com.mungmungjackjack.mmjj.product.domain.ProductAttachVO">
 		SELECT	*

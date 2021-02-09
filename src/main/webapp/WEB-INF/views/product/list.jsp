@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../include/header.jsp" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 		</div>
 	</header>
 	
@@ -38,9 +39,49 @@
 						<div style="display: flex; font-size: 20px;">
 							<span style="flex: 1;">남은 수량 : ${product.productCnt}</span>
 							<span style="flex: 1;">팔린 수량 : ${product.orderCnt}</span>
+							<sec:authorize access="isAuthenticated()">
+								<button id="cartBtn" class="add_${product.productNo}_btn" data-productNo="${product.productNo }">Cart</button>
+							</sec:authorize>
+							<script type="text/javascript">
+								$(".add_${product.productNo}_btn").click(function(){
+									console.log("cartBtn Click.......");
+	
+									var userid = null;
+									
+									<sec:authorize access="isAuthenticated()">
+										userid = '<sec:authentication property="principal.username"/>';
+									</sec:authorize>
+									
+									productNo = $(this).attr("data-productNo")
+									
+									var cart = {
+													productNo: productNo,
+													userid: userid
+												}
+									$.ajax({
+										type : "post",
+										url : "${contextPath}" + "/product/cart",
+										data : JSON.stringify(cart),
+										beforeSend : function(xhr) {
+											var $token = $("#token");
+											xhr.setRequestHeader($token.data("token-name"), $token.val());
+										},
+										contentType : "application/json; charset=utf-8",
+										success : function(result, status) {
+											alert("장바구니에 추가되었습니다.");
+										},
+										error : function(xhr, status, er) {
+											alert("장바구니에 추가되었습니다.");
+										}
+									})
+	
+							    });
+							</script>
+							<input type=hidden name="productNo" value="${product.productNo}">
 						</div>
 					</div>
 				</c:forEach>
+				<input type="hidden" id="token" data-token-name="${_csrf.headerName}" placeholder="Password" value="${_csrf.token}">
 				<!-- 페이징 시작-->
 			</div>
 			<div class='pull-right'>
@@ -65,6 +106,7 @@
 
 <!-- 실제 페이지를 클릭하면 동작을 하는 부분  -->
 <form id='actionForm' action="${contextPath}/product/list" method='get'>
+	<input type="hidden" name="userid" value="">
 	<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
 	<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
 	<input type='hidden' name='type' value='${pageMaker.cri.type}'>
@@ -90,14 +132,26 @@
 				<button class="btn btn-default">검색</button>
 			</form>
 		</div>
+		
 		<div style="display:table-cell; width: 20%; height: 60px; vertical-align: bottom;">
+		
 			<span id="regBtn" class="clck pull-right" style="font-size: 25px">상품등록</span>
+			<sec:authorize access="isAuthenticated()">
+				<span id="cartListBtn" class="clck pull-right" style="font-size: 25px">장바구니</span>
+			</sec:authorize>
 	 	</div>
 	</div>
 </div>
 
 <script>
 $(document).ready(function(){
+
+	var userid = null;
+	
+	<sec:authorize access="isAuthenticated()">
+		userid = '<sec:authentication property="principal.username"/>';
+	</sec:authorize>
+	
 	// 페이지에 표시될 상품 수가 바뀌면
 	$("#pageAmount").change(function(){
 		// 바뀌면 폼의 주소로 action
@@ -120,7 +174,15 @@ $(document).ready(function(){
 	// 상품등록 버튼 클릭시
 	$("#regBtn").click(function(){
 		// 이 주소로 진입
-        location.href="${contextPath}/product/register";    
+        location.href="${contextPath}/product/register";
+    });
+    
+	// 장바구니 버튼 클릭시
+	$("#cartListBtn").click(function(){
+		
+		actionForm.find("input[name='userid']").val(userid);
+		// 이 주소로 진입
+		actionForm.attr("action","${contextPath}/product/cartList").submit();
     });
 
 	// 상품디테일 진입시 
@@ -135,6 +197,7 @@ $(document).ready(function(){
 		actionForm.attr("action", "${contextPath}/product/detail");
 		actionForm.submit();
 	});
+
 });
 </script>
 <%@ include file="../include/footer.jsp" %>

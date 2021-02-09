@@ -11,10 +11,12 @@ import com.mungmungjackjack.mmjj.product.domain.ProductVO;
 
 
 public interface IOrderService {
-	// 체크 상품 리스트
-	public List<ProductOrderDTO> checkInProduct(List<Map<String, Object>> checkInProduct);
 	// 상품 주문 (결제후 주문번호 발급, 상품마다 주문상세 등록)
 	public void addOrder(ProductOrderDTO oDto, List<Map<String, Object>> detailList);
+	
+	// 체크 상품 리스트
+	public List<ProductOrderDTO> checkInProduct(List<Map<String, Object>> checkInProduct);
+	
 	// 회원 주문 목록
 	public List<ProductOrderVO> listOrder(String userid);
 	// 회원 주문 목록 삭제

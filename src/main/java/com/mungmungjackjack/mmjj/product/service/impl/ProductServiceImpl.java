@@ -22,6 +22,11 @@ public class ProductServiceImpl implements IProductService{
 	private ProductMapper mapper;
 
 	@Override
+	public List<ProductVO> listProduct(Criteria cri) throws Exception {
+		return mapper.listProduct(cri);
+	}
+	
+	@Override
 	public void insertProduct(ProductDTO pDto) throws Exception{
 		mapper.insertProduct(pDto);
 	}
@@ -39,15 +44,11 @@ public class ProductServiceImpl implements IProductService{
 	}
 
 	@Override
-	public void notUseProduct(String productNo)throws Exception {
-		mapper.notUseProduct(productNo);
-		
+	public boolean notUseProduct(String productNo)throws Exception {
+		boolean notUseResult = mapper.notUseProduct(productNo) == 1; 
+		return notUseResult;
 	}
 
-	@Override
-	public List<ProductVO> listProduct(Criteria cri) throws Exception {
-		return mapper.listProduct(cri);
-	}
 
 	@Override
 	public int getTotalProductCnt(Criteria cri) throws Exception {
@@ -62,11 +63,6 @@ public class ProductServiceImpl implements IProductService{
 	@Override
 	public Map<String, String> productAttachList(Map<String, String> map) throws Exception{
 		return mapper.findByProduct(map);
-	}
-
-	@Override
-	public void thumbnailRegit(ProductAttachDTO paDto) throws Exception{
-		mapper.thumbnailRegit(paDto);
 	}
 
 	

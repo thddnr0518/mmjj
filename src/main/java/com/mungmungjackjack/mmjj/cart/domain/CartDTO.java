@@ -4,7 +4,12 @@ import lombok.Data;
 
 @Data
 public class CartDTO {
-	private String cartNo;
-	private String productNo;
+	private int cartNo;
 	private String userid;
+	private String productNo;
+	private String productName;
+	private String productCnt;
+	private String productThumb;
+	private String productPrice;
+	private String deleveryPrice;
 }

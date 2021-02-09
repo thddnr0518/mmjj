@@ -9,18 +9,16 @@ import com.mungmungjackjack.mmjj.product.domain.ProductDTO;
 import com.mungmungjackjack.mmjj.product.domain.ProductVO;
 
 public interface IProductService {
-	// 상품 등록
-	public void insertProduct(ProductDTO pDto)throws Exception;
 	// 상품 리스트
 	public List<ProductVO> listProduct(Criteria cri) throws Exception;
+	// 상품 등록
+	public void insertProduct(ProductDTO pDto)throws Exception;
 	// 상품 상세
 	public ProductVO detailProduct(String productNo)throws Exception;
 	// 상품 수정
 	public boolean updateProduct(ProductDTO pDto)throws Exception;
-	
     // 상품 판매 중단
-    public void notUseProduct(String productNo)throws Exception;
-    
+    public boolean notUseProduct(String productNo)throws Exception;
     
     // 판매중인 상품 개수
     public int getTotalProductCnt(Criteria cri) throws Exception;
@@ -29,6 +27,7 @@ public interface IProductService {
     
     // 상품 번호 취득
     public Map<String, String> productAttachList(Map<String, String> map)throws Exception;
-    // 상품 대표이미지 등록
-    public void thumbnailRegit(ProductAttachDTO paDto)throws Exception;
+    
+    //-------------------- 상품 주문 단 --------------------
+    // 상품 주문
 }

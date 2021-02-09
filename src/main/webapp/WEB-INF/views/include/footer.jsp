@@ -446,7 +446,6 @@
 	<script type="text/javascript" src="${contextPath }/resources/mogo/js/template.js"></script> --%>
 	<script type="text/javascript" src="${contextPath }/resources/js/join.js"></script>
 	<script type="text/javascript" src="${contextPath }/resources/js/Modal.js"></script>
-	<script type="text/javascript" src="${contextPath }/resources/js/jQuery/3.5.1/jquery-3.5.1.js"></script>
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	
 </body>

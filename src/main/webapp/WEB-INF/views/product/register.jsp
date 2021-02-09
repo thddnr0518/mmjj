@@ -328,8 +328,7 @@ $(document).ready(function() {
 					
 					<div class="form-group">
 					  	<label for="productContent">상품소개</label>
-					  	<textarea name="productContent" maxlength="333" class="form-control" rows="3">
-					  	</textarea>
+					  	<textarea name="productContent" maxlength="333" class="form-control" rows="3"></textarea>
 					</div>
 					
 					<div class="form-group">

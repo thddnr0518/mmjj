@@ -47,22 +47,38 @@
 		<security:intercept-url pattern="/sample/all"
 				  	access="permitAll"/>
 
-		<!-- 글작성은 회원만 -->
+		<!-- 글작성 -->
 		<security:intercept-url pattern="/board/register"
 				  	access="hasRole('ROLE_MEMBER')"/>
 				  
-		<!-- 글수정은 회원만 -->
+		<!-- 글수정 -->
 		<security:intercept-url pattern="/board/modify"
 				  	access="hasRole('ROLE_MEMBER')"/>
 				  	
-		<!-- 상품등록은 회원만 -->
-		<security:intercept-url pattern="/product/register"
-				  	access="hasRole('ROLE_MEMBER')"/>
-				  
-		<!-- 글삭제는 회원만 -->
+		<!-- 글삭제 -->
 		<security:intercept-url pattern="/board/remove"
 				 	access="hasRole('ROLE_MEMBER')"/>
-				 	
+
+		<!-- 상품등록 -->
+		<security:intercept-url pattern="/product/register"
+				  	access="hasRole('ROLE_MEMBER')"/>
+				  	
+		<!-- 장바구니 추가 -->
+		<security:intercept-url pattern="/product/cart"
+				  	access="hasRole('ROLE_MEMBER')"/>
+				  	
+		<!-- 장바구니 상세 -->
+		<security:intercept-url pattern="/product/cartList"
+				  	access="hasRole('ROLE_MEMBER')"/>
+				  	
+		<!-- 장바구니 제거 -->
+		<security:intercept-url pattern="/product/deleteCart"
+				  	access="hasRole('ROLE_MEMBER')"/>
+				  	
+		<!-- 주문 -->
+		<security:intercept-url pattern="/product/order"
+				  	access="hasRole('ROLE_MEMBER')"/>
+				  					 	
 		<security:intercept-url pattern="/sample/member"
 				  	access="hasRole('ROLE_MEMBER')"/>
 		

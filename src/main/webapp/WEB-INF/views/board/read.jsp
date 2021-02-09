@@ -188,8 +188,11 @@ $(document).ready(function() {
 
 		console.log("show list " + page);
 		
-		replyService.getList(
-		{bno:bnoValue, contextPath:"${contextPath}", page: page || 1 },
+		replyService.getList({
+								bno:bnoValue,
+								contextPath:"${contextPath}",
+								page: page || 1 
+							},
 		function(replyCnt, list) {
 
 			console.log("list ****");

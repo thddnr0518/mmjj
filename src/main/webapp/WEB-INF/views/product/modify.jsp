@@ -83,10 +83,7 @@ $(document).ready(function() {
 		 
 		console.log(operation);
 		 
-		if(operation === "remove") {
-			formObj.attr("action", "${contextPath}/product/remove");
-		} else if(operation === "list") {
-			//move to list
+		if(operation === "list") {
 			formObj.attr("action", "${contextPath}/product/list").attr("method","get");
 			
 			var pageNumTag = $("input[name='pageNum']").clone();
@@ -100,14 +97,13 @@ $(document).ready(function() {
 			formObj.append(amountTag);
 			formObj.append(keywordTag);
 			formObj.append(typeTag);
-			//self.location = "${contextPath}/board/list";
-		
-			//return;      
-		} else if (operation === "modify") {
 			
-	        console.log("submit clicked");
+		} else if(operation === "remove") {
+			formObj.attr("action", "${contextPath}/product/remove?${_csrf.parameterName}=${_csrf.token}");
+			
+		} else if (operation === "modify") {
 	        
-	        var str = "";
+	        /* var str = "";
 	        
 	        $(".uploadResult ul li").each(function(i, obj){
 	          
@@ -122,7 +118,7 @@ $(document).ready(function() {
 	          
 	        });
 	        
-	        formObj.append(str).submit();
+	        formObj.append(str).submit(); */
 		}
 		
 		formObj.submit();
@@ -318,7 +314,7 @@ $(document).ready(function() {
 		</div>
 	</header>
 <section>
-	<form role="form" action="${contextPath}/product/modify?${_csrf.parameterName}=${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data" id="modifyForm">
+	<form role="form" action="${contextPath}/product/modify?${_csrf.parameterName}=${_csrf.token}" method="POST" autocomplete="off" enctype="multipart/form-data" id="modifyForm">
 	
 		<input type="hidden" name="productNo" value="${pDto.productNo}">
 		<input type="hidden" name="productImg" value="${pDto.productImg}">
@@ -394,13 +390,12 @@ $(document).ready(function() {
 					
 					<div class="form-group">
 					  	<label for="productContent">상품소개</label>
-					  	<textarea name="productContent" maxlength="333" class="form-control" rows="3">${pDto.productContent }
-					  	</textarea>
+					  	<textarea name="productContent" maxlength="333" class="form-control" rows="3">${pDto.productContent }</textarea>
 					</div>
 					
 					<div class="form-group">
 						<label>판매회사</label>
-						<input name="sallerId" value='<sec:authentication property="principal.username" />'class="form-control" readonly="readonly" type="text">
+						<input name="sallerId" value="${pDto.sallerId }"class="form-control" readonly="readonly" type="text">
 					</div>
 					
 					<sec:authentication property="principal" var="prin"/>
@@ -409,8 +404,9 @@ $(document).ready(function() {
 							<button type="submit" data-oper="modify" class="btn btn-default">Modify</button>
 							<button type="submit" data-oper="remove" class="btn btn-danger">Remove</button>
 						</c:if>
-					</sec:authorize>		
+					</sec:authorize>
 					<button type="submit" data-oper="list" class="btn btn-info">List</button>
+					<button type="submit" data-oper="list" class="btn btn-info">Order</button>
 		      </div>
 		
 		    </div>

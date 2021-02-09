@@ -7,6 +7,26 @@ var replyService = (function() {
 
 	console.log("js // replyService.....");
 	
+	function getList(param, callback, error) {
+		console.log("js // getList.....");
+		
+		var bno = param.bno;
+		var page = param.page || 1;
+		var contextPath = param.contextPath;
+		
+		$.getJSON(contextPath + "/replies/pages/" + bno + "/" + page + ".json",
+			function(data) {
+				if (callback) {
+					//callback(data); // 댓글 목록만 가져오는 경우
+					callback(data.replyCnt, data.list); // 댓글 숫자와 목록을 자겨오는 경우
+				}
+			}).fail(function(xhr, status, err) {
+				if (error) {
+					error();
+				}
+			});
+	}
+	
 	function add(reply, callback, error) {
 		console.log("add reply.................");
 		
@@ -28,25 +48,6 @@ var replyService = (function() {
 		})
 	}
 	
-	function getList(param, callback, error) {
-		console.log("js // getList.....");
-		
-		var bno = param.bno;
-		var page = param.page || 1;
-		var contextPath = param.contextPath;
-		
-		$.getJSON(contextPath + "/replies/pages/" + bno + "/" + page + ".json",
-			function(data) {
-				if (callback) {
-					//callback(data); // 댓글 목록만 가져오는 경우
-					callback(data.replyCnt, data.list); // 댓글 숫자와 목록을 자겨오는 경우
-				}
-			}).fail(function(xhr, status, err) {
-				if (error) {
-					error();
-				}
-			});
-	}
 	
 	function remove(rno, replyer, callback, error) {
 	

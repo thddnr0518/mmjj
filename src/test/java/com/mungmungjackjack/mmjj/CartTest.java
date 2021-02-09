@@ -49,9 +49,9 @@ public class CartTest {
 //	}
 	
 	// 장바구니에서 제거
-	@Test
-	public void deleteTest() {
-		service.deleteCart("20");
-	}
+//	@Test
+//	public void deleteTest() {
+//		service.deleteCart("20");
+//	}
 	
 }

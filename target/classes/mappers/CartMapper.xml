@@ -6,10 +6,17 @@
 	
 	<!-- 장바구니 목록 -->
 	<select id="listCart" resultType="com.mungmungjackjack.mmjj.cart.domain.CartVO">
-		SELECT	product_no,
-				cart_no
-		FROM	product_cart
+		SELECT	c.cart_no,
+				c.userid,
+				p.product_no,
+				p.product_name,
+				p.product_cnt,
+				p.product_thumb,
+				p.product_price,
+				p.delevery_price
+		FROM	product_cart c , product p
 		WHERE	userid=#{userid}
+		AND		c.product_no = p.product_no
 	</select>
 	
 	<!-- 장바구니 추가 -->
@@ -21,8 +28,9 @@
 	<!-- 장바구니 제거 -->
 	<delete id="deleteCart">
 		DELETE
-		FROM     product_cart
-		WHERE    cart_no=#{cartNo}
+		FROM    product_cart
+		WHERE   cart_no=#{cartNo}
+		AND		userid=#{userid}
 	</delete>
 	
 	<!-- 미리보기 5개 -->

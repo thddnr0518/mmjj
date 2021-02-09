@@ -43,7 +43,7 @@
 	<select id="selMember" resultType="com.mungmungjackjack.mmjj.member.domain.MemberDTO">
 		SELECT *
 		FROM member
-		WHERE id = #{id}
+		WHERE userid = #{id}
 	</select>
 	
 	<select id="selLoginInfo" resultType="com.mungmungjackjack.mmjj.member.domain.MemberDTO">
