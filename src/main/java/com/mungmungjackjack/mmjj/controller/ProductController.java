@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mungmungjackjack.mmjj.cart.domain.CartDTO;
 import com.mungmungjackjack.mmjj.cart.domain.CartVO;
+import com.mungmungjackjack.mmjj.cart.domain.TestDTO;
 import com.mungmungjackjack.mmjj.cart.service.ICartService;
 import com.mungmungjackjack.mmjj.domain.Criteria;
 import com.mungmungjackjack.mmjj.domain.PageDTO;
@@ -238,59 +239,12 @@ public class ProductController {
 		return "redirect:/product/list" + cri.getListLink();
 	}
 	
-	// 단건 주문
-	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = "/order", method = RequestMethod.GET)
-	public void orderGET(String productNo, String userid, int orderCnt, Model model)throws Exception {
-		log.info("product order ............GET");
-		
-		log.info("productNo : " + productNo);
-		log.info("userid : " + userid);
-		log.info("orderCnt : " + orderCnt);
-		
-		// 진입할 상품번호를 기준으로 데이터 반환받기
-		ProductVO pVO =  productService.detailProduct(productNo);
-		
-		// VO의 데이터를 받을 DTO생성
-		ProductDTO pDto = new ProductDTO();
-		
-		pDto.setProductNo(pVO.getProduct_no());
-		pDto.setSallerId(pVO.getSaller_id());
-		pDto.setProductName(pVO.getProduct_name());
-		pDto.setProductContent(pVO.getProduct_content());
-		pDto.setProductCnt(pVO.getProduct_cnt());
-		pDto.setProductImg(pVO.getProduct_img());
-		pDto.setProductThumb(pVO.getProduct_thumb());
-		pDto.setProductPrice(pVO.getProduct_price());
-		pDto.setDeleveryPrice(pVO.getDelevery_price());
-		pDto.setOrderCnt(pVO.getOrder_cnt());
-		pDto.setProductIndate(pVO.getProduct_indate());
-		pDto.setProductUseyn(pVO.getProduct_useyn());
-		
-		// 화면으로 상품 데이터 넘겨줌
-		//model.addAttribute("pDto", pDto);
-		
-		// 화면으로 회원 데이터 넘겨줌
-		MemberDTO mDto =  memberService.selMember(userid);
-		//model.addAttribute("mDto", mDto);
-		
-		Map<String, Object> productOrder = new HashMap<String, Object>();
-		
-		productOrder.put("pDto", pDto);
-		productOrder.put("mDto", mDto);
-		productOrder.put("orderCnt", orderCnt);
-		
-		log.info("pDto : " + pDto);
-		
-		model.addAttribute("pO", productOrder);
-	}
-	
 	// 장바구니 추가
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/cart",
 				consumes = "application/json",
 				produces = {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> addCart(@RequestBody CartDTO cDto){
+	public ResponseEntity<String> addCart(@RequestBody CartDTO cDto)throws Exception{
 		log.info("addCart .............. ");
 		log.info("cDto : " + cDto);
 		
@@ -303,7 +257,7 @@ public class ProductController {
 				: new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	// 장바구니 상세
+	// 장바구니 상세 페이지로 이동
 	@PreAuthorize("principal.username == #userid")
 	@RequestMapping(value = "/cartList", method = RequestMethod.GET)
 	public void cartListGET(@RequestParam("userid") String userid, @ModelAttribute("cri") Criteria cri, Model model)throws Exception {
@@ -337,6 +291,40 @@ public class ProductController {
 		model.addAttribute("list", cartDto);
 	}
 	
+	// 장바구니 상세 페이지로 이동
+		@PreAuthorize("principal.username == #userid")
+		@RequestMapping(value = "/cartList2", method = RequestMethod.GET)
+		public void cartListGET2(@RequestParam("userid") String userid, @ModelAttribute("cri") Criteria cri, Model model)throws Exception {
+			log.info("cartList  ............GET");
+			
+			log.info("userid  : " + userid);
+			
+			// 반환된 데이터를 리스트로 담기(VO)
+			List<CartVO> cartVO = cartService.listCart(userid);
+			// 화면으로 list객체로 보내줄 객체선언(DTO) 
+			List<CartDTO> cartDto = new ArrayList<CartDTO>();
+			
+			// 반복문으로 리스트를 돌려서 VO객체를 DTO객체에 담기
+			for (CartVO cVO : cartVO) {
+				
+				// VO의 데이터를 받을 DTO생성
+				CartDTO cDto = new CartDTO();
+				
+				cDto.setCartNo(cVO.getCart_no());
+				cDto.setProductNo(cVO.getProduct_no());
+				cDto.setUserid(cVO.getUserid());
+				cDto.setProductName(cVO.getProduct_name());
+				cDto.setProductCnt(cVO.getProduct_cnt());
+				cDto.setProductThumb(cVO.getProduct_thumb());
+				cDto.setProductPrice(cVO.getProduct_price());
+				cDto.setDeleveryPrice(cVO.getDelevery_price());
+
+				cartDto.add(cDto);
+			}
+			// 쌓인 DTO리스트 데이터를 화면단으로 list로 보내줌
+			model.addAttribute("list", cartDto);
+		}
+	
 	// 장바구니 제거
 	@PreAuthorize("principal.username == #userid")
 	@ResponseBody
@@ -364,6 +352,22 @@ public class ProductController {
 		}
 		
 		log.info("1이면 성공 0은 실패 : " + result);
+		
+	return result == 1
+			? new ResponseEntity<String>("success", HttpStatus.OK)
+			: new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	// 주문수량 상품수량 확인
+	@PreAuthorize("principal.username == #userid")
+	@ResponseBody
+	@RequestMapping(value = "/orderCntConfirm", method = RequestMethod.POST)
+	public ResponseEntity<String> cartOrder(@RequestParam(value = "chbox[]") List<String> tDto, String userid) throws Exception {
+		log.info("cartOrderCntConfirm.....");
+	 
+		log.info("tDto : " + tDto);
+		int result = 0;
+		
 		
 	return result == 1
 			? new ResponseEntity<String>("success", HttpStatus.OK)
@@ -419,10 +423,56 @@ public class ProductController {
 ////		model.addAttribute("pO", productOrder);
 //	}
 	
-	
+	// 단건 주문
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(value = "/order2", method = RequestMethod.GET)
+	public void orderGET(String productNo, String userid, int orderCnt, Model model)throws Exception {
+		log.info("product order ............GET");
+		
+		log.info("productNo : " + productNo);
+		log.info("userid : " + userid);
+		log.info("orderCnt : " + orderCnt);
+		
+		// 진입할 상품번호를 기준으로 데이터 반환받기
+		ProductVO pVO =  productService.detailProduct(productNo);
+		
+		// VO의 데이터를 받을 DTO생성
+		ProductDTO pDto = new ProductDTO();
+		
+		pDto.setProductNo(pVO.getProduct_no());
+		pDto.setSallerId(pVO.getSaller_id());
+		pDto.setProductName(pVO.getProduct_name());
+		pDto.setProductContent(pVO.getProduct_content());
+		pDto.setProductCnt(pVO.getProduct_cnt());
+		pDto.setProductImg(pVO.getProduct_img());
+		pDto.setProductThumb(pVO.getProduct_thumb());
+		pDto.setProductPrice(pVO.getProduct_price());
+		pDto.setDeleveryPrice(pVO.getDelevery_price());
+		pDto.setOrderCnt(pVO.getOrder_cnt());
+		pDto.setProductIndate(pVO.getProduct_indate());
+		pDto.setProductUseyn(pVO.getProduct_useyn());
+		
+		// 화면으로 상품 데이터 넘겨줌
+		//model.addAttribute("pDto", pDto);
+		
+		// 화면으로 회원 데이터 넘겨줌
+		MemberDTO mDto =  memberService.selMember(userid);
+		//model.addAttribute("mDto", mDto);
+		
+		Map<String, Object> productOrder = new HashMap<String, Object>();
+		
+		productOrder.put("pDto", pDto);
+		productOrder.put("mDto", mDto);
+		productOrder.put("orderCnt", orderCnt);
+		
+		log.info("pDto : " + pDto);
+		
+		model.addAttribute("pO", productOrder);
+	}
+		
 	// 주문처리
 	@PreAuthorize("principal.username == #userid")
-	@RequestMapping(value = "/order", method = RequestMethod.POST)
+	@RequestMapping(value = "/order1", method = RequestMethod.POST)
 	public String orderPOST(HttpServletRequest req, String userid, String orderPrice, String deleveryAddress, String productNo, String orderCnt)throws Exception {
 		
 		log.info("req  : " + req);

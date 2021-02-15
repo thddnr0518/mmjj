@@ -3,6 +3,15 @@
 @import 'https://fonts.googleapis.com/css?family=Montserrat:400,700';
 @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700';
 @import 'https://fonts.googleapis.com/css?family=Kaushan+Script';
+.cartList{
+	display: table;
+	width: 100%;
+}
+.cartContent {
+	display: table-cell;
+	text-align: center;
+	margin: 0 auto;
+}
 .rankImg {
 	width : 30px;
 	height : 30px;

@@ -39,9 +39,9 @@
 				<input type="number" name="productCnt" value="${cartList.productCnt}" readonly="readonly">
 				<input type="text" class="productPrice" name="productPrice" value="${cartList.productPrice }" readonly="readonly">
 				<input type="text" value="${cartList.deleveryPrice }" readonly="readonly">
-				<input type="number" class="inputCnt" name="inputCnt" value="" placeholder="체크 후 입력" readonly="readonly">
+				<input type="number" class="inputCnt" name="inputCnt" value="" readonly="readonly" placeholder="수량을 입력해주세요.">
 				<button type="button" class="delete_${cartList.cartNo}_btn" data-cartNo="${cartList.cartNo}">&times;</button>
-				<input type="number" name="orderPrice" value="" style="display: none;">
+				<input type="text" name="orderPrice" value="" style="display: none;">
 				<script type="text/javascript">
 					$(".delete_${cartList.cartNo}_btn").click(function(){
 						var confirm_val = confirm("정말 삭제하시겠습니까?");
@@ -85,7 +85,7 @@
 		</div>
 	</c:forEach>
 	<div style="margin: 10px; text-align: right;">
-		합계 : <input type="number" value="" name="totalPrice">
+		합계 : <input type="text" value="" name="totalPrice">
 	</div>
 	<input type="hidden" id="token" data-token-name="${_csrf.headerName}" placeholder="Password" value="${_csrf.token}">
 	<form id="operForm" action="${contextPath}/product/list" method="GET">
@@ -103,9 +103,6 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-	var totalPrice = new Array();
-	var unique = new Array();
-	
 	var userid = null;
 	
 	<sec:authorize access="isAuthenticated()">
@@ -211,89 +208,44 @@ $(document).ready(function(){
 		} 
 	});
 
-	$("input[name='inputCnt'][readonly='readonly']").on("click", function(){
-		var papa = $(this).parent();
-		var grandpa = papa.parent();
-		var ggrandpa = grandpa.parent();
-
-		console.log("test");
-		papa.find("input[name='chBox']").prop("checked", true);
-		$(this).removeAttr("readonly");
-	});
-	
-	$("input:checkbox[class='chBox']").on("change", function(){
-
-		var papa = $(this).parent();
-		var grandpa = papa.parent();
-		var ggrandpa = grandpa.parent();
-		
-		if($(this).prop("checked")){
-			grandpa.find("input[name='inputCnt']").removeAttr('readonly');
-
-		}else{
-			var removePrice = grandpa.find("input[name='orderPrice']").val();
-
-			totalPrice = jQuery.grep(totalPrice, function(value){
-				return value != removePrice;
-			});
-
-			if(totalPrice.length >= 1){
-				var sum = totalPrice.reduce((stack, el) => {
-					return stack + el;
-				});
-				ggrandpa.find("input[name='totalPrice']").val(sum);
-				
-			}else{
-				var sum = 0;
-				ggrandpa.find("input[name='totalPrice']").val(sum);
-			}
-			
-			
-			grandpa.find("input[name='inputCnt']").val("");
-			grandpa.find("input[name='orderPrice']").val("");
-			grandpa.find("input[name='inputCnt']").attr("readonly", "readonly");
-		}
-	});
-
 	// 수량 입력란이 변경되면
 	$(".inputCnt").change(function(){
-		var papa = $(this).parent();
-		var grandpa = papa.parent();
-		var ggrandpa = grandpa.parent();
-		
 		var inputCnt = $(this).val();
 
-		// 상품 가격
-		var searchProductPrice = papa.find("input[name='productPrice']").val();
-		// 수량 * 가격
-		var searchOrderPrice = papa.find("input[name='orderPrice']").val((inputCnt * searchProductPrice));
-
+		var inputCntParent = $(this).parent();
+		var searchProductName = inputCntParent.find("input[name='productName']").val();
+		var searchProductPrice = inputCntParent.find("input[name='productPrice']").val();
+		var searchOrderPrice = inputCntParent.find("input[name='orderPrice']").val((inputCnt * searchProductPrice));
+		
+		
 		$(".chBox").data("cartCnt",inputCnt);
 
 		var cartCnt = $(".chBox").data("cartCnt");
 
 		console.log("inputCnt : " + inputCnt);
+		console.log("상품명 : " + searchProductName);
 		console.log("가격 : " + searchProductPrice);
 		console.log("체크 인풋 수량 데이터 : " + cartCnt);
 		
-		console.log("구매 금액 : " + searchOrderPrice.val());
+		console.log("계산할 금액 : " + searchOrderPrice.val());
+	});
+
+	$("input[name='inputCnt'][readonly='readonly']").on("click", function(){
+		var papa = $(this).parent();
+		papa.find("input[class='chBox']").prop("checked", true);
+	});
+	
+	$("input:checkbox[class='chBox']").change(function(){
+		var papa = $(this).parent();
+		var grandpa = papa.parent();
 		
-		totalPrice.push(Number(searchOrderPrice.val()));
-
-		var sum = totalPrice.reduce((stack, el) => {
-			return stack + el;
-		});
-
-		// 유니크하게 만들기
-		/* var set = new Set(totalPrice);
-
-		unique = [...set];
-
-		var sum = unique.reduce((stack, el) => {
-			return stack + el;
-		}); */
-
-		ggrandpa.find("input[name='totalPrice']").val(sum);
+		if($(this).is(":checked")){
+			grandpa.find("input[name='inputCnt']").removeAttr('readonly');
+		}else{
+			grandpa.find("input[name='inputCnt']").val("");
+			grandpa.find("input[name='orderPrice']").val("");
+			grandpa.find("input[name='inputCnt']").attr('readonly', 'readonly');
+		}
 	});
 	
 });
